@@ -46,7 +46,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	
-	public static final String BALL_BALLIMG_RSC = "structure_fire/resource/ball.png";
+	public static final String PLAYER_CHARACTER = "structure_fire/resource/fireman_mockup.png";
 	public static final String BALL_BROKENIMG_RSC = "structure_fire/resource/brokenball.png";
 	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/gameover.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
@@ -56,7 +56,7 @@ public class StructureFireGame extends StateBasedGame {
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 
-	Ball ball;
+	Player player;
 	ArrayList<Bang> explosions;
 
 	/**
@@ -94,13 +94,13 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadSound(BANG_EXPLOSIONSND_RSC);	
 
 		// preload all the resources to avoid warnings & minimize latency...
-		ResourceManager.loadImage(BALL_BALLIMG_RSC);
+		ResourceManager.loadImage(PLAYER_CHARACTER);
 		ResourceManager.loadImage(BALL_BROKENIMG_RSC);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
 		
-		ball = new Ball(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
+		player = new Player(container.getWidth() >> 1, container.getHeight() >> 1);
 
 	}
 	
