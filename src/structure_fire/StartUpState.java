@@ -41,8 +41,8 @@ class StartUpState extends BasicGameState {
 		
 		bg.player.render(g);
 		g.drawString("Bounces: ?", 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
+//		for (Bang b : bg.explosions)
+//			b.render(g);
 		g.drawImage(ResourceManager.getImage(StructureFireGame.STARTUP_BANNER_RSC),
 				225, 270);		
 	}

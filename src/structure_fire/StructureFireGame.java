@@ -47,7 +47,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final int GAMEOVERSTATE = 2;
 	
 	public static final String PLAYER_CHARACTER = "structure_fire/resource/fireman_mockup.png";
-	public static final String BALL_BROKENIMG_RSC = "structure_fire/resource/brokenball.png";
+	public static final String WOODEN_PLANKS = "structure_fire/resource/wooden_planks.png";
 	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/gameover.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
 	public static final String BANG_EXPLOSIONIMG_RSC = "structure_fire/resource/explosion.png";
@@ -57,7 +57,7 @@ public class StructureFireGame extends StateBasedGame {
 	public final int ScreenHeight;
 
 	Player player;
-	ArrayList<Bang> explosions;
+	ArrayList<ArrayList<Tile>> map;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -75,8 +75,10 @@ public class StructureFireGame extends StateBasedGame {
 		ScreenWidth = width;
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
-		explosions = new ArrayList<Bang>(10);
-				
+
+		map = new ArrayList<>(12);
+		for ( int i = 0; i < 12; i++ )
+			map.add(new ArrayList<Tile>(12));
 	}
 
 
@@ -95,7 +97,7 @@ public class StructureFireGame extends StateBasedGame {
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(PLAYER_CHARACTER);
-		ResourceManager.loadImage(BALL_BROKENIMG_RSC);
+		ResourceManager.loadImage(WOODEN_PLANKS);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
@@ -107,8 +109,8 @@ public class StructureFireGame extends StateBasedGame {
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new StructureFireGame("Bounce!", 800, 600));
-			app.setDisplayMode(800, 600, false);
+			app = new AppGameContainer(new StructureFireGame("Structure Fire", 800, 600));
+			app.setDisplayMode(600, 800, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {

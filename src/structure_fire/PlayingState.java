@@ -1,8 +1,6 @@
 package structure_fire;
 
-import java.util.Iterator;
-
-import jig.Vector;
+import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -28,6 +26,11 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		StructureFireGame bg = (StructureFireGame)game;
+		int row = 11;
+		for ( int col = 0; col < 12; col++ ) {
+			bg.map.get(row).add(col, new Tile((col * 50) + 25, (row * 50) + 25));
+		}
 	}
 
 	@Override
@@ -42,8 +45,11 @@ class PlayingState extends BasicGameState {
 		
 		bg.player.render( g );
 		g.drawString("Bounces: " + bounces, 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
+		for ( ArrayList<Tile> r : bg.map ) {
+			for ( Tile t : r ) {
+				t.render( g );
+			}
+		}
 	}
 
 	@Override
@@ -54,6 +60,12 @@ class PlayingState extends BasicGameState {
 		StructureFireGame bg = (StructureFireGame)game;
 
 		bg.player.control( input, bg );
+
+		for ( ArrayList<Tile> r : bg.map ) {
+			for ( Tile t : r ) {
+				t.update( delta, bg.player );
+			}
+		}
 
 		bg.player.update( delta );
 //		// structure_fire the ball...

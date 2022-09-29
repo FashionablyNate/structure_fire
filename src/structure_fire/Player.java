@@ -18,6 +18,7 @@ public class Player extends Entity {
     }
 
     public void update(final int delta) {
+        this.velocity = this.velocity.add(new Vector(0, 0.001f * delta));
         translate(velocity.scale(delta));
     }
 
