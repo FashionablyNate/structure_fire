@@ -9,6 +9,8 @@ public class WaterParticle extends Entity {
 
     private Vector velocity;
 
+    public boolean visible = true;
+
     public WaterParticle( final float x, final float y ) {
         super( x, y );
         addImageWithBoundingBox(

@@ -18,7 +18,7 @@ public class Player extends Entity {
     }
 
     public void update(final int delta) {
-        this.velocity = this.velocity.add(new Vector(0, 0.001f * delta));
+        this.velocity = this.velocity.add(new Vector(0, 0.002f * delta));
         translate(velocity.scale(delta));
     }
 
@@ -51,9 +51,9 @@ public class Player extends Entity {
     public void spray(Input input, StructureFireGame fg) {
         if ( input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ) {
             Vector direction = new Vector(this.getX() - input.getAbsoluteMouseX(), this.getY() - input.getAbsoluteMouseY());
-            WaterParticle test = new WaterParticle(this.getX() + (this.getCoarseGrainedWidth() / 2) - 5, this.getY() + 10);
-            test.setVelocity(direction.unit().negate());
-            fg.water_stream.add(test);
+            WaterParticle particle = new WaterParticle(this.getX() + (this.getCoarseGrainedWidth() / 2) - 5, this.getY() + 10);
+            particle.setVelocity(direction.unit().negate());
+            fg.water_stream.add(particle);
         }
     }
 

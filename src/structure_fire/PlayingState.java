@@ -1,6 +1,7 @@
 package structure_fire;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -51,9 +52,9 @@ class PlayingState extends BasicGameState {
 			}
 		}
 
-		for ( WaterParticle p : fg.water_stream ) {
+		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
+		for ( WaterParticle p : fg.water_stream )
 			p.render(g);
-		}
 	}
 
 	@Override
@@ -74,37 +75,11 @@ class PlayingState extends BasicGameState {
 
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);
+			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
+				p.visible = false;
 		}
 
 		fg.player.update( delta );
-//		// structure_fire the ball...
-//		boolean bounced = false;
-//		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-//				|| bg.ball.getCoarseGrainedMinX() < 0) {
-//			bg.ball.bounce(90);
-//			bounced = true;
-//		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-//				|| bg.ball.getCoarseGrainedMinY() < 0) {
-//			bg.ball.bounce(0);
-//			bounced = true;
-//		}
-//		if (bounced) {
-//			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-//			bounces++;
-//		}
-//		bg.ball.update(delta);
-//
-//		// check if there are any finished explosions, if so remove them
-//		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
-//			if (!i.next().isActive()) {
-//				i.remove();
-//			}
-//		}
-//
-//		if (bounces >= 10) {
-//			((GameOverState)game.getState(StructureFireGame.GAMEOVERSTATE)).setUserScore(bounces);
-//			game.enterState(StructureFireGame.GAMEOVERSTATE);
-//		}
 	}
 
 	@Override

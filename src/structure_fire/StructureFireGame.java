@@ -82,7 +82,7 @@ public class StructureFireGame extends StateBasedGame {
 		map = new ArrayList<>(12);
 		for ( int i = 0; i < 12; i++ )
 			map.add(new ArrayList<Tile>(12));
-		water_stream = new ArrayList<>(10);
+		water_stream = new ArrayList<>(1000);
 	}
 
 
@@ -121,8 +121,5 @@ public class StructureFireGame extends StateBasedGame {
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
-
 	}
-
-	
 }
