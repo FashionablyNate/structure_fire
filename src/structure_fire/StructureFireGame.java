@@ -48,7 +48,8 @@ public class StructureFireGame extends StateBasedGame {
 	
 	public static final String PLAYER_CHARACTER = "structure_fire/resource/fireman_mockup.png";
 	public static final String WOODEN_PLANKS = "structure_fire/resource/wooden_planks.png";
-	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/gameover.png";
+	public static final String WATER_PARTICLE = "structure_fire/resource/water_particle.png";
+	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/GameOver.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
 	public static final String BANG_EXPLOSIONIMG_RSC = "structure_fire/resource/explosion.png";
 	public static final String BANG_EXPLOSIONSND_RSC = "structure_fire/resource/explosion.wav";
@@ -58,6 +59,8 @@ public class StructureFireGame extends StateBasedGame {
 
 	Player player;
 	ArrayList<ArrayList<Tile>> map;
+
+	ArrayList<WaterParticle> water_stream;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -79,6 +82,7 @@ public class StructureFireGame extends StateBasedGame {
 		map = new ArrayList<>(12);
 		for ( int i = 0; i < 12; i++ )
 			map.add(new ArrayList<Tile>(12));
+		water_stream = new ArrayList<>(10);
 	}
 
 
@@ -98,6 +102,7 @@ public class StructureFireGame extends StateBasedGame {
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(PLAYER_CHARACTER);
 		ResourceManager.loadImage(WOODEN_PLANKS);
+		ResourceManager.loadImage(WATER_PARTICLE);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
@@ -109,7 +114,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new StructureFireGame("Structure Fire", 800, 600));
+			app = new AppGameContainer(new StructureFireGame("Structure Fire", 600, 800));
 			app.setDisplayMode(600, 800, false);
 			app.setVSync(true);
 			app.start();

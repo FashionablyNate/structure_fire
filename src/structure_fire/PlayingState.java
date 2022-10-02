@@ -41,14 +41,18 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		StructureFireGame bg = (StructureFireGame)game;
+		StructureFireGame fg = (StructureFireGame)game;
 		
-		bg.player.render( g );
-		g.drawString("Bounces: " + bounces, 10, 30);
-		for ( ArrayList<Tile> r : bg.map ) {
+		fg.player.render( g );
+//		g.drawString("Bounces: " + bounces, 10, 30);
+		for ( ArrayList<Tile> r : fg.map ) {
 			for ( Tile t : r ) {
 				t.render( g );
 			}
+		}
+
+		for ( WaterParticle p : fg.water_stream ) {
+			p.render(g);
 		}
 	}
 
@@ -57,17 +61,22 @@ class PlayingState extends BasicGameState {
 			int delta) throws SlickException {
 
 		Input input = container.getInput();
-		StructureFireGame bg = (StructureFireGame)game;
+		StructureFireGame fg = (StructureFireGame)game;
 
-		bg.player.control( input, bg );
+		fg.player.movement( input, fg );
+		fg.player.spray( input, fg );
 
-		for ( ArrayList<Tile> r : bg.map ) {
+		for ( ArrayList<Tile> r : fg.map ) {
 			for ( Tile t : r ) {
-				t.update( delta, bg.player );
+				t.update( delta, fg.player );
 			}
 		}
 
-		bg.player.update( delta );
+		for ( WaterParticle p : fg.water_stream ) {
+			p.update(delta);
+		}
+
+		fg.player.update( delta );
 //		// structure_fire the ball...
 //		boolean bounced = false;
 //		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
