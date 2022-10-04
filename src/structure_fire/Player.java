@@ -50,7 +50,8 @@ public class Player extends Entity {
 
     public void spray(Input input, StructureFireGame fg) {
         if ( input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ) {
-            Vector direction = new Vector(this.getX() - input.getAbsoluteMouseX(), this.getY() - input.getAbsoluteMouseY());
+            Float modifier = (fg.rand.nextFloat() - 0.5f) * 50;
+            Vector direction = new Vector(this.getX() - input.getAbsoluteMouseX() + modifier, this.getY() - input.getAbsoluteMouseY() + modifier );
             WaterParticle particle = new WaterParticle(this.getX() + (this.getCoarseGrainedWidth() / 2) - 5, this.getY() + 10);
             particle.setVelocity(direction.unit().negate());
             fg.water_stream.add(particle);

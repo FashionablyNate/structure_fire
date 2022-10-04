@@ -3,6 +3,7 @@ package structure_fire;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -61,6 +62,7 @@ public class StructureFireGame extends StateBasedGame {
 
 	Player player;
 	Map<Integer, Tile> map;
+	Random rand;
 
 	ArrayList<WaterParticle> water_stream;
 
@@ -81,6 +83,7 @@ public class StructureFireGame extends StateBasedGame {
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 
+		rand = new Random();
 		map = new HashMap<>();
 		water_stream = new ArrayList<>(1000);
 	}

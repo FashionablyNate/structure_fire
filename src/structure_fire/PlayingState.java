@@ -72,14 +72,6 @@ class PlayingState extends BasicGameState {
 					fg.map.get( (i * 1000) + j ).update(delta, fg.player);
 			}
 		}
-//		for ( Tile t : fg.map.get(row) ) {
-//			t.update(delta, fg.player);
-//		}
-//		for ( ArrayList<Tile> r : fg.map ) {
-//			for ( Tile t : r ) {
-//				t.update(delta, fg.player);
-//			}
-//		}
 
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);
