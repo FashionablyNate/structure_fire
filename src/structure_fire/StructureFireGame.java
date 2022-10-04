@@ -1,6 +1,8 @@
 package structure_fire;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -58,7 +60,7 @@ public class StructureFireGame extends StateBasedGame {
 	public final int ScreenHeight;
 
 	Player player;
-	ArrayList<ArrayList<Tile>> map;
+	Map<Integer, Tile> map;
 
 	ArrayList<WaterParticle> water_stream;
 
@@ -79,9 +81,7 @@ public class StructureFireGame extends StateBasedGame {
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 
-		map = new ArrayList<>(12);
-		for ( int i = 0; i < 12; i++ )
-			map.add(new ArrayList<Tile>(12));
+		map = new HashMap<>();
 		water_stream = new ArrayList<>(1000);
 	}
 

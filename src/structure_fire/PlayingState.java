@@ -30,7 +30,7 @@ class PlayingState extends BasicGameState {
 		StructureFireGame bg = (StructureFireGame)game;
 		int row = 11;
 		for ( int col = 0; col < 12; col++ ) {
-			bg.map.get(row).add(col, new Tile((col * 50) + 25, (row * 50) + 25));
+			bg.map.put( (row * 1000) + col, new Tile( (col * 50) + 25, (row * 50) + 25 ));
 		}
 	}
 
@@ -46,11 +46,8 @@ class PlayingState extends BasicGameState {
 		
 		fg.player.render( g );
 //		g.drawString("Bounces: " + bounces, 10, 30);
-		for ( ArrayList<Tile> r : fg.map ) {
-			for ( Tile t : r ) {
-				t.render( g );
-			}
-		}
+
+		fg.map.forEach( (k, v) -> v.render( g ) );
 
 		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
 		for ( WaterParticle p : fg.water_stream )
@@ -67,11 +64,22 @@ class PlayingState extends BasicGameState {
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
 
-		for ( ArrayList<Tile> r : fg.map ) {
-			for ( Tile t : r ) {
-				t.update( delta, fg.player );
+		int row = (int) Math.floor(fg.player.getY() / 50) + 1;
+		int col = (int) Math.floor(fg.player.getX() / 50);
+		for ( int i = row - 1; i <= row + 1; i++ ) {
+			for ( int j = col - 1; j <= col + 1; j++ ) {
+				if ( fg.map.containsKey( (i * 1000) + j ) )
+					fg.map.get( (i * 1000) + j ).update(delta, fg.player);
 			}
 		}
+//		for ( Tile t : fg.map.get(row) ) {
+//			t.update(delta, fg.player);
+//		}
+//		for ( ArrayList<Tile> r : fg.map ) {
+//			for ( Tile t : r ) {
+//				t.update(delta, fg.player);
+//			}
+//		}
 
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);
