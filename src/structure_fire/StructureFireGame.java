@@ -49,7 +49,8 @@ public class StructureFireGame extends StateBasedGame {
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	
-	public static final String PLAYER_CHARACTER = "structure_fire/resource/fireman_mockup.png";
+	public static final String PLAYER_CHARACTER_RIGHT = "structure_fire/resource/fireman_right.png";
+	public static final String PLAYER_CHARACTER_LEFT = "structure_fire/resource/fireman_left.png";
 	public static final String WOODEN_PLANKS = "structure_fire/resource/wooden_planks.png";
 	public static final String WATER_PARTICLE = "structure_fire/resource/water_particle.png";
 	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/GameOver.png";
@@ -103,7 +104,8 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadSound(BANG_EXPLOSIONSND_RSC);	
 
 		// preload all the resources to avoid warnings & minimize latency...
-		ResourceManager.loadImage(PLAYER_CHARACTER);
+		ResourceManager.loadImage(PLAYER_CHARACTER_RIGHT);
+		ResourceManager.loadImage(PLAYER_CHARACTER_LEFT);
 		ResourceManager.loadImage(WOODEN_PLANKS);
 		ResourceManager.loadImage(WATER_PARTICLE);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);

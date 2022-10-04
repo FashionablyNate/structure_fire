@@ -18,7 +18,8 @@ public class Tile extends Entity {
     public void update(final int delta, Player player) {
         Collision collides = this.collides(player);
         if ( collides != null ) {
-            player.setVelocity(player.getVelocity().setY(-0.002f * delta));
+            player.setVelocity( player.getVelocity().setY(0f) );
+            player.setY( this.getY() - (this.getCoarseGrainedHeight()) );
         }
     }
 }
