@@ -28,9 +28,18 @@ class PlayingState extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		StructureFireGame bg = (StructureFireGame)game;
-		int row = 11;
-		for ( int col = 0; col < 12; col++ ) {
-			bg.map.put( (row * 1000) + col, new Tile( (col * 50) + 25, (row * 50) + 25 ));
+		int col;
+		int row = 5;
+		for ( col = 3; col < 12; col++ ) {
+			bg.map.put( (row * 1000) + col, new Planks( (col * 50) + 25, (row * 50) + 25 ));
+		}
+		row = 11;
+		for ( col = 0; col < 12; col++ ) {
+			bg.map.put( (row * 1000) + col, new Planks( (col * 50) + 25, (row * 50) + 25 ));
+		}
+		col = 8;
+		for ( row = 5; row < 11; row++ ) {
+			bg.map.put( (row * 1000) + col, new Ladder( (col * 50) + 25, (row * 50) + 25 ));
 		}
 	}
 
@@ -64,14 +73,20 @@ class PlayingState extends BasicGameState {
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
 
-		int row = (int) Math.floor(fg.player.getY() / 50) + 1;
+		int row = (int) Math.floor(fg.player.getY() / 50);
 		int col = (int) Math.floor(fg.player.getX() / 50);
-		for ( int i = row - 1; i <= row + 1; i++ ) {
-			for ( int j = col - 1; j <= col + 1; j++ ) {
-				if ( fg.map.containsKey( (i * 1000) + j ) )
-					fg.map.get( (i * 1000) + j ).update(delta, fg.player);
-			}
+
+		if ( fg.map.containsKey( ((row + 1) * 1000) + col ) ) {
+			fg.map.get(((row + 1) * 1000) + col).update(delta, fg.player);
+			if ( fg.map.containsKey((row * 1000) + col) )
+				fg.map.get((row * 1000) + col).update(delta, fg.player);
 		}
+//		for ( int i = row - 1; i <= row + 1; i++ ) {
+//			for ( int j = col - 1; j <= col + 1; j++ ) {
+//				if ( fg.map.containsKey( (i * 1000) + j ) )
+//					fg.map.get( (i * 1000) + j ).update(delta, fg.player);
+//			}
+//		}
 
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);
