@@ -1,8 +1,7 @@
 package structure_fire;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-
-import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -28,6 +27,11 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		StructureFireGame bg = (StructureFireGame)game;
+		int row = 11;
+		for ( int col = 0; col < 12; col++ ) {
+			bg.map.put( (row * 1000) + col, new Tile( (col * 50) + 25, (row * 50) + 25 ));
+		}
 	}
 
 	@Override
@@ -38,12 +42,16 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		StructureFireGame bg = (StructureFireGame)game;
+		StructureFireGame fg = (StructureFireGame)game;
 		
-		bg.ball.render(g);
-		g.drawString("Bounces: " + bounces, 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
+		fg.player.render( g );
+//		g.drawString("Bounces: " + bounces, 10, 30);
+
+		fg.map.forEach( (k, v) -> v.render( g ) );
+
+		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
+		for ( WaterParticle p : fg.water_stream )
+			p.render(g);
 	}
 
 	@Override
@@ -51,48 +59,27 @@ class PlayingState extends BasicGameState {
 			int delta) throws SlickException {
 
 		Input input = container.getInput();
-		StructureFireGame bg = (StructureFireGame)game;
-		
-		if (input.isKeyDown(Input.KEY_W)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, -.001f)));
-		}
-		if (input.isKeyDown(Input.KEY_S)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, +.001f)));
-		}
-		if (input.isKeyDown(Input.KEY_A)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(-.001f, 0)));
-		}
-		if (input.isKeyDown(Input.KEY_D)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(+.001f, 0f)));
-		}
-		// structure_fire the ball...
-		boolean bounced = false;
-		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ball.getCoarseGrainedMinX() < 0) {
-			bg.ball.bounce(90);
-			bounced = true;
-		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ball.getCoarseGrainedMinY() < 0) {
-			bg.ball.bounce(0);
-			bounced = true;
-		}
-		if (bounced) {
-			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-			bounces++;
-		}
-		bg.ball.update(delta);
+		StructureFireGame fg = (StructureFireGame)game;
 
-		// check if there are any finished explosions, if so remove them
-		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
+		fg.player.movement( input, fg );
+		fg.player.spray( input, fg );
+
+		int row = (int) Math.floor(fg.player.getY() / 50) + 1;
+		int col = (int) Math.floor(fg.player.getX() / 50);
+		for ( int i = row - 1; i <= row + 1; i++ ) {
+			for ( int j = col - 1; j <= col + 1; j++ ) {
+				if ( fg.map.containsKey( (i * 1000) + j ) )
+					fg.map.get( (i * 1000) + j ).update(delta, fg.player);
 			}
 		}
 
-		if (bounces >= 10) {
-			((GameOverState)game.getState(StructureFireGame.GAMEOVERSTATE)).setUserScore(bounces);
-			game.enterState(StructureFireGame.GAMEOVERSTATE);
+		for ( WaterParticle p : fg.water_stream ) {
+			p.update(delta);
+			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
+				p.visible = false;
 		}
+
+		fg.player.update( delta );
 	}
 
 	@Override

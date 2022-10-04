@@ -39,10 +39,10 @@ class StartUpState extends BasicGameState {
 			Graphics g) throws SlickException {
 		StructureFireGame bg = (StructureFireGame)game;
 		
-		bg.ball.render(g);
+		bg.player.render(g);
 		g.drawString("Bounces: ?", 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
+//		for (Bang b : bg.explosions)
+//			b.render(g);
 		g.drawImage(ResourceManager.getImage(StructureFireGame.STARTUP_BANNER_RSC),
 				225, 270);		
 	}
@@ -57,28 +57,28 @@ class StartUpState extends BasicGameState {
 		if (input.isKeyDown(Input.KEY_SPACE))
 			bg.enterState(StructureFireGame.PLAYINGSTATE);
 		
-		// structure_fire the ball...
-		boolean bounced = false;
-		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ball.getCoarseGrainedMinX() < 0) {
-			bg.ball.bounce(90);
-			bounced = true;
-		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ball.getCoarseGrainedMinY() < 0) {
-			bg.ball.bounce(0);
-			bounced = true;
-		}
-		if (bounced) {
-			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-		}
-		bg.ball.update(delta);
-
-		// check if there are any finished explosions, if so remove them
-		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
-			}
-		}
+//		// structure_fire the ball...
+//		boolean bounced = false;
+//		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
+//				|| bg.ball.getCoarseGrainedMinX() < 0) {
+//			bg.ball.bounce(90);
+//			bounced = true;
+//		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
+//				|| bg.ball.getCoarseGrainedMinY() < 0) {
+//			bg.ball.bounce(0);
+//			bounced = true;
+//		}
+//		if (bounced) {
+//			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
+//		}
+//		bg.ball.update(delta);
+//
+//		// check if there are any finished explosions, if so remove them
+//		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
+//			if (!i.next().isActive()) {
+//				i.remove();
+//			}
+//		}
 
 	}
 
