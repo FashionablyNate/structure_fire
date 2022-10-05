@@ -1,7 +1,8 @@
 package structure_fire;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,6 +10,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import static com.apple.eio.FileManager.getResource;
 
 
 /**
@@ -27,20 +30,9 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		StructureFireGame bg = (StructureFireGame)game;
-		int col;
-		int row = 5;
-		for ( col = 3; col < 12; col++ ) {
-			bg.map.put( (row * 1000) + col, new Planks( (col * 50) + 25, (row * 50) + 25 ));
-		}
-		row = 11;
-		for ( col = 0; col < 12; col++ ) {
-			bg.map.put( (row * 1000) + col, new Planks( (col * 50) + 25, (row * 50) + 25 ));
-		}
-		col = 8;
-		for ( row = 5; row < 11; row++ ) {
-			bg.map.put( (row * 1000) + col, new Ladder( (col * 50) + 25, (row * 50) + 25 ));
-		}
+		StructureFireGame fg = (StructureFireGame)game;
+
+		Map.load( "level_one", fg );
 	}
 
 	@Override

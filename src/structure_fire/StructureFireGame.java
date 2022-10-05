@@ -113,7 +113,9 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
-		
+
+		Entity.antiAliasing = false;
+
 		player = new Player(container.getWidth() >> 1, container.getHeight() >> 1);
 
 	}
