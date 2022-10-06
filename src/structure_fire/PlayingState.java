@@ -68,17 +68,35 @@ class PlayingState extends BasicGameState {
 		int row = (int) Math.floor(fg.player.getY() / 50);
 		int col = (int) Math.floor(fg.player.getX() / 50);
 
-		if ( fg.map.containsKey( ((row + 1) * 1000) + col ) ) {
-			fg.map.get(((row + 1) * 1000) + col).update(delta, fg.player);
-			if ( fg.map.containsKey((row * 1000) + col) )
-				fg.map.get((row * 1000) + col).update(delta, fg.player);
+		if ( input.isKeyDown(Input.KEY_SPACE) &&
+				fg.map.containsKey(( row * 1000) + col ) &&
+				fg.map.get( (row * 1000) + col ).isLadder ) {
+			fg.map.get((row * 1000) + col).update(delta, fg.player, 0, 0);
+		} else {
+			for (int x = row - 1; x <= row + 1; x++) {
+				for (int y = col - 1; y <= col + 1; y++) {
+					if (x != 0 && y != 0) {
+						if (fg.map.containsKey((x * 1000) + y))
+							fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
+					}
+				}
+			}
 		}
-//		for ( int i = row - 1; i <= row + 1; i++ ) {
-//			for ( int j = col - 1; j <= col + 1; j++ ) {
-//				if ( fg.map.containsKey( (i * 1000) + j ) )
-//					fg.map.get( (i * 1000) + j ).update(delta, fg.player);
-//			}
-//		}
+
+//		if ( fg.map.containsKey( (row * 1000) + col ) )
+//			fg.map.get( (row * 1000) + col ).update( delta, fg.player );
+//		else if ( fg.map.containsKey( ( (row + 1) * 1000) + col ) ) {
+//			if (fg.map.containsKey((row * 1000) + (col + 1)))
+//				fg.map.get((row * 1000) + (col + 1)).update(delta, fg.player);
+//			else if (fg.map.containsKey((row * 1000) + (col - 1)))
+//				fg.map.get((row * 1000) + (col - 1)).update(delta, fg.player);
+//			fg.map.get(((row + 1) * 1000) + col).update(delta, fg.player);
+//		} else if ( fg.map.containsKey( ( (row - 1) * 1000) + col ) )
+//			fg.map.get( ( (row - 1) * 1000 ) + col ).update( delta, fg.player );
+//		else if ( fg.map.containsKey( ( row * 1000) + (col + 1) ) )
+//			fg.map.get( (row * 1000) + (col + 1) ).update( delta, fg.player );
+//		else if ( fg.map.containsKey( ( row * 1000) + (col - 1) ) )
+//			fg.map.get( (row * 1000) + (col - 1) ).update( delta, fg.player );
 
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);

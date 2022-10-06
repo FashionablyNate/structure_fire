@@ -15,6 +15,7 @@ public class Player extends Entity {
                 ResourceManager.getImage(
                         StructureFireGame.PLAYER_CHARACTER_RIGHT)
         );
+        setScale( 0.95f );
         velocity = new Vector(0, 0);
         right = true;
     }
