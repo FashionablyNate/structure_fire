@@ -68,17 +68,22 @@ class PlayingState extends BasicGameState {
 		int row = (int) Math.floor(fg.player.getY() / 50);
 		int col = (int) Math.floor(fg.player.getX() / 50);
 
-		if ( input.isKeyDown(Input.KEY_SPACE) &&
-				fg.map.containsKey(( row * 1000) + col ) &&
-				fg.map.get( (row * 1000) + col ).isLadder ) {
-			fg.map.get((row * 1000) + col).update(delta, fg.player, 0, 0);
+		if (
+			fg.map.containsKey(( row * 1000) + col ) &&
+			fg.map.get( (row * 1000) + col ).isLadder
+		) {
+			fg.map.get( (row * 1000) + col ).update(delta, fg.player, 0, 0);
+			for ( int y = col - 1; y <= col + 1; y++ ) {
+				if ( y != 0 ) {
+					if ( fg.map.containsKey( ( row * 1000 ) + y ) )
+						fg.map.get( (row * 1000) + y ).update( delta, fg.player, 0, y - col );
+				}
+			}
 		} else {
 			for (int x = row - 1; x <= row + 1; x++) {
 				for (int y = col - 1; y <= col + 1; y++) {
-					if (x != 0 && y != 0) {
-						if (fg.map.containsKey((x * 1000) + y))
-							fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
-					}
+					if (fg.map.containsKey((x * 1000) + y))
+						fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
 				}
 			}
 		}

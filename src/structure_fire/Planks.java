@@ -21,7 +21,7 @@ public class Planks extends Tile {
         Collision collides = this.collides(player);
         if ( collides != null ) {
             if ( row == 1 && col == 0 ) {
-                player.setVelocity( player.getVelocity().setY( 0.0f ) ) ;
+                player.setVelocity( player.getVelocity().setY( 0.0f ) );
                 player.setY( this.getY() - player.getCoarseGrainedHeight() );
             }
             else if ( row == -1 && col == 0 ) {

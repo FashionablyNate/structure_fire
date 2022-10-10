@@ -19,7 +19,12 @@ public class Ladder extends Tile {
     public void update(final int delta, Player player, int row, int col) {
         Collision collides = this.collides(player);
         if ( collides != null ) {
-            player.setVelocity(player.getVelocity().add(new Vector(0, -0.0022f * delta)));
+            if ( row == 0 )
+                player.setVelocity(new Vector(player.getVelocity().getX(), -0.22f));
+            else {
+                player.setY(this.getY() - player.getCoarseGrainedHeight() - 2);
+                player.setVelocity(new Vector(player.getVelocity().getX(), 0.0f));
+            }
         }
     }
 }
