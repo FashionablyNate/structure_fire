@@ -88,23 +88,13 @@ class PlayingState extends BasicGameState {
 			}
 		}
 
-//		if ( fg.map.containsKey( (row * 1000) + col ) )
-//			fg.map.get( (row * 1000) + col ).update( delta, fg.player );
-//		else if ( fg.map.containsKey( ( (row + 1) * 1000) + col ) ) {
-//			if (fg.map.containsKey((row * 1000) + (col + 1)))
-//				fg.map.get((row * 1000) + (col + 1)).update(delta, fg.player);
-//			else if (fg.map.containsKey((row * 1000) + (col - 1)))
-//				fg.map.get((row * 1000) + (col - 1)).update(delta, fg.player);
-//			fg.map.get(((row + 1) * 1000) + col).update(delta, fg.player);
-//		} else if ( fg.map.containsKey( ( (row - 1) * 1000) + col ) )
-//			fg.map.get( ( (row - 1) * 1000 ) + col ).update( delta, fg.player );
-//		else if ( fg.map.containsKey( ( row * 1000) + (col + 1) ) )
-//			fg.map.get( (row * 1000) + (col + 1) ).update( delta, fg.player );
-//		else if ( fg.map.containsKey( ( row * 1000) + (col - 1) ) )
-//			fg.map.get( (row * 1000) + (col - 1) ).update( delta, fg.player );
-
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);
+			int p_row = (int) Math.floor(p.getY() / 50);
+			int p_col = (int) Math.floor(p.getX() / 50);
+			if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
+				p.visible = false;
+			}
 			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
 				p.visible = false;
 		}
