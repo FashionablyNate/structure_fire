@@ -15,6 +15,7 @@ public class Player extends Entity {
                 ResourceManager.getImage(
                         StructureFireGame.PLAYER_CHARACTER_RIGHT)
         );
+        setScale( 0.95f );
         velocity = new Vector(0, 0);
         right = true;
     }
@@ -67,7 +68,7 @@ public class Player extends Entity {
                     StructureFireGame.PLAYER_CHARACTER_RIGHT));
         }
         if ( input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ) {
-            float modifier = (fg.rand.nextFloat() - 0.5f) * 150;
+            float modifier = (fg.rand.nextFloat() - 0.5f) * 100;
             Vector direction = new Vector(
                     this.getX() - input.getAbsoluteMouseX(),
                     this.getY() - input.getAbsoluteMouseY() + modifier

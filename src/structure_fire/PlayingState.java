@@ -1,7 +1,8 @@
 package structure_fire;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,6 +10,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import static com.apple.eio.FileManager.getResource;
 
 
 /**
@@ -27,11 +30,9 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		StructureFireGame bg = (StructureFireGame)game;
-		int row = 11;
-		for ( int col = 0; col < 12; col++ ) {
-			bg.map.put( (row * 1000) + col, new Tile( (col * 50) + 25, (row * 50) + 25 ));
-		}
+		StructureFireGame fg = (StructureFireGame)game;
+
+		Map.load( "level_one", fg );
 	}
 
 	@Override
@@ -64,17 +65,36 @@ class PlayingState extends BasicGameState {
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
 
-		int row = (int) Math.floor(fg.player.getY() / 50) + 1;
+		int row = (int) Math.floor(fg.player.getY() / 50);
 		int col = (int) Math.floor(fg.player.getX() / 50);
-		for ( int i = row - 1; i <= row + 1; i++ ) {
-			for ( int j = col - 1; j <= col + 1; j++ ) {
-				if ( fg.map.containsKey( (i * 1000) + j ) )
-					fg.map.get( (i * 1000) + j ).update(delta, fg.player);
+
+		if (
+			fg.map.containsKey(( row * 1000) + col ) &&
+			fg.map.get( (row * 1000) + col ).isLadder
+		) {
+			fg.map.get( (row * 1000) + col ).update(delta, fg.player, 0, 0);
+			for ( int y = col - 1; y <= col + 1; y++ ) {
+				if ( y != 0 ) {
+					if ( fg.map.containsKey( ( row * 1000 ) + y ) )
+						fg.map.get( (row * 1000) + y ).update( delta, fg.player, 0, y - col );
+				}
+			}
+		} else {
+			for (int x = row - 1; x <= row + 1; x++) {
+				for (int y = col - 1; y <= col + 1; y++) {
+					if (fg.map.containsKey((x * 1000) + y))
+						fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
+				}
 			}
 		}
 
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);
+			int p_row = (int) Math.floor(p.getY() / 50);
+			int p_col = (int) Math.floor(p.getX() / 50);
+			if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
+				p.visible = false;
+			}
 			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
 				p.visible = false;
 		}
