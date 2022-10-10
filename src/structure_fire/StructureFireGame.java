@@ -1,6 +1,9 @@
 package structure_fire;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -46,9 +49,13 @@ public class StructureFireGame extends StateBasedGame {
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	
-	public static final String BALL_BALLIMG_RSC = "structure_fire/resource/ball.png";
-	public static final String BALL_BROKENIMG_RSC = "structure_fire/resource/brokenball.png";
-	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/gameover.png";
+	public static final String PLAYER_CHARACTER_RIGHT = "structure_fire/resource/fireman_right.png";
+	public static final String PLAYER_CHARACTER_LEFT = "structure_fire/resource/fireman_left.png";
+	public static final String WOODEN_PLANKS = "structure_fire/resource/wooden_planks.png";
+	public static final String WOODEN_LADDER = "structure_fire/resource/wooden_ladder.png";
+	public static final String STONE = "structure_fire/resource/stone.png";
+	public static final String WATER_PARTICLE = "structure_fire/resource/water_particle.png";
+	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/GameOver.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
 	public static final String BANG_EXPLOSIONIMG_RSC = "structure_fire/resource/explosion.png";
 	public static final String BANG_EXPLOSIONSND_RSC = "structure_fire/resource/explosion.wav";
@@ -56,8 +63,11 @@ public class StructureFireGame extends StateBasedGame {
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 
-	Ball ball;
-	ArrayList<Bang> explosions;
+	Player player;
+	Map<Integer, Tile> map;
+	Random rand;
+
+	ArrayList<WaterParticle> water_stream;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -75,8 +85,10 @@ public class StructureFireGame extends StateBasedGame {
 		ScreenWidth = width;
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
-		explosions = new ArrayList<Bang>(10);
-				
+
+		rand = new Random();
+		map = new HashMap<>();
+		water_stream = new ArrayList<>(1000);
 	}
 
 
@@ -94,28 +106,31 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadSound(BANG_EXPLOSIONSND_RSC);	
 
 		// preload all the resources to avoid warnings & minimize latency...
-		ResourceManager.loadImage(BALL_BALLIMG_RSC);
-		ResourceManager.loadImage(BALL_BROKENIMG_RSC);
+		ResourceManager.loadImage(PLAYER_CHARACTER_RIGHT);
+		ResourceManager.loadImage(PLAYER_CHARACTER_LEFT);
+		ResourceManager.loadImage(WOODEN_PLANKS);
+		ResourceManager.loadImage(WOODEN_LADDER);
+		ResourceManager.loadImage(STONE);
+		ResourceManager.loadImage(WATER_PARTICLE);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
-		
-		ball = new Ball(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
+
+		Entity.antiAliasing = false;
+
+		player = new Player(container.getWidth() >> 1, container.getHeight() >> 1);
 
 	}
 	
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new StructureFireGame("Bounce!", 800, 600));
-			app.setDisplayMode(800, 600, false);
+			app = new AppGameContainer(new StructureFireGame("Structure Fire", 600, 800));
+			app.setDisplayMode(600, 800, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
-
 	}
-
-	
 }

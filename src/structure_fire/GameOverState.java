@@ -48,8 +48,6 @@ class GameOverState extends BasicGameState {
 
 		StructureFireGame bg = (StructureFireGame)game;
 		g.drawString("Bounces: " + lastKnownBounces, 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
 		g.drawImage(ResourceManager.getImage(StructureFireGame.GAMEOVER_BANNER_RSC), 225,
 				270);
 
@@ -65,11 +63,11 @@ class GameOverState extends BasicGameState {
 			game.enterState(StructureFireGame.STARTUPSTATE, new EmptyTransition(), new HorizontalSplitTransition() );
 
 		// check if there are any finished explosions, if so remove them
-		for (Iterator<Bang> i = ((StructureFireGame)game).explosions.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
-			}
-		}
+//		for (Iterator<Bang> i = ((StructureFireGame)game).explosions.iterator(); i.hasNext();) {
+//			if (!i.next().isActive()) {
+//				i.remove();
+//			}
+//		}
 
 	}
 
