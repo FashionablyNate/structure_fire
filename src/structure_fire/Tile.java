@@ -8,6 +8,7 @@ import jig.Vector;
 public class Tile extends Entity {
 
     public boolean isLadder = false;
+    public boolean flammable = true;
 
     public Tile( final float x, final float y ) {
         super( x, y );

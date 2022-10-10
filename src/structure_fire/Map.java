@@ -17,8 +17,10 @@ public class Map {
 //                    System.out.print(s + " ");
                     if ( s.trim().equals("1") )
                         fg.map.put( (row * 1000) + col, new Planks( (col * 50) + 25, (row * 50) + 25 ));
-                    if ( s.trim().equals("2") )
+                    else if ( s.trim().equals("2") )
                         fg.map.put( (row * 1000) + col, new Ladder( (col * 50) + 25, (row * 50) + 25 ));
+                    else if ( s.trim().equals("3") )
+                        fg.map.put( (row * 1000) + col, new Stone( (col * 50) + 25, (row * 50) + 25 ));
                     col++;
                 }
                 row++; col = 0;
