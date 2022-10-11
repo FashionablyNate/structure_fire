@@ -1,5 +1,7 @@
 package structure_fire;
 
+import jig.Vector;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
@@ -48,6 +50,12 @@ public class SFTileMap implements TileBasedMap {
                         fg.map.put((row * 1000) + col, new Civilian( (col * 50) + 25, (row * 50) + 25 ));
                         fg.civilians.push(new int[]{row, col});
                         graph[row][col] = 2;
+                    } else if ( s.trim().equals("7") ) {
+                        fg.map.put((row * 1000) + col, new Coin( (col * 50) + 25, (row * 50) + 25 ));
+                        graph[row][col] = 2;
+                    } else if ( s.trim().equals("8") ) {
+                        fg.map.put((row * 1000) + col, new BGPlanks( (col * 50) + 25, (row * 50) + 25 ));
+                        graph[row][col] = 2;
                     } else {
                         graph[row][col] = 0;
                     }
@@ -63,14 +71,19 @@ public class SFTileMap implements TileBasedMap {
         return graph;
     }
 
-    public void update_tiles( int delta, StructureFireGame fg ) {
+    public void update_tiles( int delta, StructureFireGame fg, Input input ) {
         int row = (int) Math.floor(fg.player.getY() / 50);
         int col = (int) Math.floor(fg.player.getX() / 50);
         if (
-                fg.map.containsKey(( row * 1000) + col ) &&
-                        fg.map.get( (row * 1000) + col ).isLadder
+                (fg.map.containsKey(( row * 1000) + col ) &&
+                fg.map.get( (row * 1000) + col ).isLadder &&
+                input.isKeyDown(Input.KEY_SPACE)) ||
+                (fg.map.containsKey(( (row + 1) * 1000) + col ) &&
+                fg.map.get( ( (row + 1) * 1000) + col ).isLadder &&
+                input.isKeyDown(Input.KEY_SPACE))
         ) {
-            fg.map.get( (row * 1000) + col ).update(delta, fg.player, 0, 0);
+            fg.player.setVelocity(new Vector(fg.player.getVelocity().getX(), -0.22f));
+//            fg.map.get( (row * 1000) + col ).update(delta, fg.player, 0, 0);
             for ( int y = col - 1; y <= col + 1; y++ ) {
                 if ( y != 0 ) {
                     if ( fg.map.containsKey( ( row * 1000 ) + y ) )
@@ -80,8 +93,10 @@ public class SFTileMap implements TileBasedMap {
         } else {
             for (int x = row - 1; x <= row + 1; x++) {
                 for (int y = col - 1; y <= col + 1; y++) {
-                    if (fg.map.containsKey((x * 1000) + y))
-                        fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
+                    if (fg.map.containsKey((x * 1000) + y)) {
+                        if (!fg.map.get((x * 1000) + y).isLadder)
+                            fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
+                    }
                 }
             }
         }
@@ -90,8 +105,9 @@ public class SFTileMap implements TileBasedMap {
             p.update(delta);
             int p_row = (int) Math.floor(p.getY() / 50);
             int p_col = (int) Math.floor(p.getX() / 50);
-            if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
-                p.visible = false;
+            if (fg.map.containsKey( (p_row * 1000) + p_col )) {
+                if (fg.map.get( (p_row * 1000) + p_col).isCollideable )
+                    p.visible = false;
                 fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
                 if ( fg.map.get(  (p_row * 1000) + p_col ).isCivilian ) {
                     fg.civilians.push(new int[]{p_row, p_col});
