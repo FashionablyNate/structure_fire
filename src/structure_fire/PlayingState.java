@@ -25,6 +25,7 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+
 		StructureFireGame fg = (StructureFireGame)game;
 
 		fg.tile_map = new SFTileMap( "level_one", fg );
@@ -33,12 +34,22 @@ class PlayingState extends BasicGameState {
 				SFTileMap.WIDTH * SFTileMap.HEIGHT,
 				false
 		);
+		fg.fl_enemy.give_up = false;
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		bounces = 0;
 		container.setSoundOn(true);
+
+		StructureFireGame fg = (StructureFireGame)game;
+
+		fg.tile_map = new SFTileMap( "level_one", fg );
+		fg.pathFinder = new AStarPathFinder(
+				fg.tile_map,
+				SFTileMap.WIDTH * SFTileMap.HEIGHT,
+				false
+		);
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
@@ -51,7 +62,8 @@ class PlayingState extends BasicGameState {
 			if (v.visible)
 				v.render(g);
 		});
-		fg.fl_enemy.render( g );
+		if (!fg.fl_enemy.give_up)
+			fg.fl_enemy.render( g );
 
 		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
 		for ( WaterParticle p : fg.water_stream )
@@ -69,43 +81,19 @@ class PlayingState extends BasicGameState {
 
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
+		fg.player.update( delta );
+
 		fg.tile_map.update_tiles( delta, fg );
 
-		for ( WaterParticle p : fg.water_stream ) {
-			p.update(delta);
-			int p_row = (int) Math.floor(p.getY() / 50);
-			int p_col = (int) Math.floor(p.getX() / 50);
-			if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
-				p.visible = false;
-				fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
-			}
-			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
-				p.visible = false;
-		}
-
-		fg.map.forEach( (k, v) -> {
-			if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
-				fg.flames.add( v.flame );
-			} else if (!v.isOnFire) {
-				fg.flames.remove( v.flame );
-			} else {
-				v.timeToLive -= delta;
-			}
-			if ( v.timeToLive < 0 ) {
-				v.visible = false;
-				fg.flames.remove( v.flame );
-				fg.tile_map.to_delete.push(k);
-				fg.tile_map.graph[(int)((v.getY() - 25) / 50)][(int)((v.getY() - 25) / 50)] = 0;
-			}
-		});
-
-		fg.tile_map.to_delete.forEach( (k) -> {
-			fg.map.remove(k);
-		});
-
-		fg.player.update( delta );
 		fg.fl_enemy.move( delta, fg );
 		fg.fl_enemy.update( delta );
+
+		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).isOnFire);
+		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).saved);
+
+		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
+			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+		}
 	}
 
 	@Override

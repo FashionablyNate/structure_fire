@@ -47,7 +47,7 @@ class GameOverState extends BasicGameState {
 			Graphics g) throws SlickException {
 
 		StructureFireGame bg = (StructureFireGame)game;
-		g.drawString("Bounces: " + lastKnownBounces, 10, 30);
+//		g.drawString("Bounces: " + lastKnownBounces, 10, 30);
 		g.drawImage(ResourceManager.getImage(StructureFireGame.GAMEOVER_BANNER_RSC), 225,
 				270);
 
