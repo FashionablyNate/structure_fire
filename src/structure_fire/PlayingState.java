@@ -88,6 +88,8 @@ class PlayingState extends BasicGameState {
 		fg.fl_enemy.move( delta, fg );
 		fg.fl_enemy.update( delta );
 
+		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).isOnFire);
+
 		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
 			fg.enterState(StructureFireGame.GAMEOVERSTATE);
 		}

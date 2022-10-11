@@ -34,10 +34,16 @@ public class FlameEnemy extends Entity {
     public void move( final int delta, StructureFireGame fg ) {
 
         if (reached_goal && !give_up) {
-            int pl_y = (int) Math.floor(fg.player.getY() / 50) + 1;
-            int pl_x = (int) Math.floor(fg.player.getX() / 50);
             pos_x = (int) Math.floor(this.getX() / 50);
             pos_y = (int) Math.floor(this.getY() / 50);
+            int pl_x, pl_y;
+            if (fg.civilians.size() > 0) {
+                pl_x = fg.civilians.get(0)[1];
+                pl_y = fg.civilians.get(0)[0];
+            } else {
+                pl_x = (int) Math.floor(fg.player.getX() / 50);
+                pl_y = (int) Math.floor(fg.player.getY() / 50) + 1;
+            }
 
             if (fg.map.containsKey( (pos_y * 1000) + pos_x )) {
                 fg.map.get( (pos_y * 1000) + pos_x ).isOnFire = true;

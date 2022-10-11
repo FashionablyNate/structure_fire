@@ -46,6 +46,7 @@ public class SFTileMap implements TileBasedMap {
                         graph[row][col] = 0;
                     } else if ( s.trim().equals("6") ) {
                         fg.map.put((row * 1000) + col, new Civilian( (col * 50) + 25, (row * 50) + 25 ));
+                        fg.civilians.push(new int[]{row, col});
                         graph[row][col] = 2;
                     } else {
                         graph[row][col] = 0;

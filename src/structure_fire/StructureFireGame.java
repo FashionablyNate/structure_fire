@@ -1,9 +1,6 @@
 package structure_fire;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -75,6 +72,7 @@ public class StructureFireGame extends StateBasedGame {
 	AStarPathFinder pathFinder;
 	Path path;
 	FlameEnemy fl_enemy;
+	Stack<int[]> civilians;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -97,6 +95,7 @@ public class StructureFireGame extends StateBasedGame {
 		map = new HashMap<>();
 		water_stream = new ArrayList<>(1000);
 		flames = new ArrayList<Burn>(10);
+		civilians = new Stack<>();
 	}
 
 
