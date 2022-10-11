@@ -1,17 +1,12 @@
 package structure_fire;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-
-import static com.apple.eio.FileManager.getResource;
+import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 
 
 /**
@@ -32,7 +27,12 @@ class PlayingState extends BasicGameState {
 			throws SlickException {
 		StructureFireGame fg = (StructureFireGame)game;
 
-		Map.load( "level_one", fg );
+		fg.tile_map = new SFTileMap( "level_one", fg );
+		fg.pathFinder = new AStarPathFinder(
+				fg.tile_map,
+				SFTileMap.WIDTH * SFTileMap.HEIGHT,
+				false
+		);
 	}
 
 	@Override
@@ -46,13 +46,18 @@ class PlayingState extends BasicGameState {
 		StructureFireGame fg = (StructureFireGame)game;
 		
 		fg.player.render( g );
-//		g.drawString("Bounces: " + bounces, 10, 30);
 
-		fg.map.forEach( (k, v) -> v.render( g ) );
+		fg.map.forEach( (k, v) -> {
+			if (v.visible)
+				v.render(g);
+		});
+		fg.fl_enemy.render( g );
 
 		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
 		for ( WaterParticle p : fg.water_stream )
 			p.render(g);
+		for (Burn b : fg.flames)
+			b.render(g);
 	}
 
 	@Override
@@ -64,29 +69,7 @@ class PlayingState extends BasicGameState {
 
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
-
-		int row = (int) Math.floor(fg.player.getY() / 50);
-		int col = (int) Math.floor(fg.player.getX() / 50);
-
-		if (
-			fg.map.containsKey(( row * 1000) + col ) &&
-			fg.map.get( (row * 1000) + col ).isLadder
-		) {
-			fg.map.get( (row * 1000) + col ).update(delta, fg.player, 0, 0);
-			for ( int y = col - 1; y <= col + 1; y++ ) {
-				if ( y != 0 ) {
-					if ( fg.map.containsKey( ( row * 1000 ) + y ) )
-						fg.map.get( (row * 1000) + y ).update( delta, fg.player, 0, y - col );
-				}
-			}
-		} else {
-			for (int x = row - 1; x <= row + 1; x++) {
-				for (int y = col - 1; y <= col + 1; y++) {
-					if (fg.map.containsKey((x * 1000) + y))
-						fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
-				}
-			}
-		}
+		fg.tile_map.update_tiles( delta, fg );
 
 		for ( WaterParticle p : fg.water_stream ) {
 			p.update(delta);
@@ -94,12 +77,35 @@ class PlayingState extends BasicGameState {
 			int p_col = (int) Math.floor(p.getX() / 50);
 			if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
 				p.visible = false;
+				fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
 			}
 			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
 				p.visible = false;
 		}
 
+		fg.map.forEach( (k, v) -> {
+			if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
+				fg.flames.add( v.flame );
+			} else if (!v.isOnFire) {
+				fg.flames.remove( v.flame );
+			} else {
+				v.timeToLive -= delta;
+			}
+			if ( v.timeToLive < 0 ) {
+				v.visible = false;
+				fg.flames.remove( v.flame );
+				fg.tile_map.to_delete.push(k);
+				fg.tile_map.graph[(int)((v.getY() - 25) / 50)][(int)((v.getY() - 25) / 50)] = 0;
+			}
+		});
+
+		fg.tile_map.to_delete.forEach( (k) -> {
+			fg.map.remove(k);
+		});
+
 		fg.player.update( delta );
+		fg.fl_enemy.move( delta, fg );
+		fg.fl_enemy.update( delta );
 	}
 
 	@Override

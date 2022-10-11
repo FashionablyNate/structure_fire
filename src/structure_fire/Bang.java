@@ -16,11 +16,10 @@ class Bang extends Entity {
 	public Bang(final float x, final float y) {
 		super(x, y);
 		explosion = new Animation(ResourceManager.getSpriteSheet(
-				StructureFireGame.BANG_EXPLOSIONIMG_RSC, 64, 64), 0, 0, 22, 0, true, 50,
+				StructureFireGame.BURN_FIRE_IMG_RSC, 64, 64), 0, 0, 22, 0, true, 50,
 				true);
 		addAnimation(explosion);
 		explosion.setLooping(false);
-		ResourceManager.getSound(StructureFireGame.BANG_EXPLOSIONSND_RSC).play();
 	}
 
 	public boolean isActive() {
