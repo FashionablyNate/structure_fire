@@ -25,6 +25,7 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+
 		StructureFireGame fg = (StructureFireGame)game;
 
 		fg.tile_map = new SFTileMap( "level_one", fg );
@@ -33,12 +34,22 @@ class PlayingState extends BasicGameState {
 				SFTileMap.WIDTH * SFTileMap.HEIGHT,
 				false
 		);
+		fg.fl_enemy.give_up = false;
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		bounces = 0;
 		container.setSoundOn(true);
+
+		StructureFireGame fg = (StructureFireGame)game;
+
+		fg.tile_map = new SFTileMap( "level_one", fg );
+		fg.pathFinder = new AStarPathFinder(
+				fg.tile_map,
+				SFTileMap.WIDTH * SFTileMap.HEIGHT,
+				false
+		);
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
@@ -51,7 +62,8 @@ class PlayingState extends BasicGameState {
 			if (v.visible)
 				v.render(g);
 		});
-		fg.fl_enemy.render( g );
+		if (!fg.fl_enemy.give_up)
+			fg.fl_enemy.render( g );
 
 		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
 		for ( WaterParticle p : fg.water_stream )
@@ -75,6 +87,10 @@ class PlayingState extends BasicGameState {
 
 		fg.fl_enemy.move( delta, fg );
 		fg.fl_enemy.update( delta );
+
+		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
+			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+		}
 	}
 
 	@Override

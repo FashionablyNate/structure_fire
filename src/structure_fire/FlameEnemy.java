@@ -1,15 +1,20 @@
 package structure_fire;
 
+import jdk.internal.util.xml.impl.Pair;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
 import org.newdawn.slick.Animation;
 
+import java.util.Stack;
+
 public class FlameEnemy extends Entity {
     private Vector velocity;
     private int pos_x, pos_y, goal_x, goal_y;
     private boolean reached_goal;
+    public boolean give_up;
     private Animation flame;
+    private Stack<int[]> options;
 
     public FlameEnemy( final float x, final float y ) {
         super ( x, y );
@@ -21,12 +26,14 @@ public class FlameEnemy extends Entity {
         setScale( 0.95f );
         velocity = new Vector(0, 0);
         reached_goal = true;
+        give_up = false;
+        options = new Stack<>();
 
     }
 
     public void move( final int delta, StructureFireGame fg ) {
 
-        if (reached_goal) {
+        if (reached_goal && !give_up) {
             int pl_y = (int) Math.floor(fg.player.getY() / 50) + 1;
             int pl_x = (int) Math.floor(fg.player.getX() / 50);
             pos_x = (int) Math.floor(this.getX() / 50);
@@ -42,16 +49,32 @@ public class FlameEnemy extends Entity {
             ) {
                 goal_x = fg.path.getX(1);
                 goal_y = fg.path.getY(1);
-                reached_goal = false;
+            } else {
+                fg.map.forEach( (k, v) -> {
+                    if (v.flammable && !v.isOnFire) {
+                        options.push(new int[]{(int) Math.floor(v.getX() / 50), (int) Math.floor(v.getY() / 50)});
+                    }
+                });
+                for ( int i = 0; i < options.size() && fg.path == null; i++ ) {
+                    fg.path = fg.pathFinder.findPath(null, pos_x, pos_y, options.get(i)[0], options.get(i)[1] );
+                }
+                if (fg.path == null) {
+                    give_up = true;
+                } else {
+                    goal_x = fg.path.getX(1);
+                    goal_y = fg.path.getY(1);
+                    options.clear();
+                }
             }
+            reached_goal = false;
         }
     }
 
     public void update(final int delta) {
 
         this.setVelocity(new Vector(
-            0.001f * (((goal_x * 50) + 25) - this.getX()) * delta,
-            0.001f * (((goal_y * 50) + 25) - this.getY()) * delta
+            0.002f * (((goal_x * 50) + 25) - this.getX()) * delta,
+            0.002f * (((goal_y * 50) + 25) - this.getY()) * delta
         ));
         float x_diff = (((goal_x * 50) + 25) - this.getX());
         float y_diff = (((goal_y * 50) + 25) - this.getY());
