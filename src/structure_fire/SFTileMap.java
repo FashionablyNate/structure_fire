@@ -6,14 +6,17 @@ import org.newdawn.slick.util.pathfinding.TileBasedMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class SFTileMap implements TileBasedMap {
 
     public static final int WIDTH = 12, HEIGHT = 12;
     public int[][] graph;
+    public Stack<Integer> to_delete;
 
     SFTileMap(String level_name, StructureFireGame fg ) {
         graph = load( level_name, fg );
+        to_delete = new Stack();
     }
 
     public int[][] load( String level_name, StructureFireGame fg ) {

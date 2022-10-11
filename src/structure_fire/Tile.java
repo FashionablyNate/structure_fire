@@ -10,6 +10,8 @@ public class Tile extends Entity {
     public boolean isLadder = false;
     public boolean flammable = true;
     public boolean isOnFire = false;
+    public int timeToLive = 1000;
+    public boolean visible = true;
     public Burn flame;
 
     public Tile( final float x, final float y ) {

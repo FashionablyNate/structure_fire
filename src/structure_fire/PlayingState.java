@@ -48,7 +48,8 @@ class PlayingState extends BasicGameState {
 		fg.player.render( g );
 
 		fg.map.forEach( (k, v) -> {
-			v.render(g);
+			if (v.visible)
+				v.render(g);
 		});
 		fg.fl_enemy.render( g );
 
@@ -87,7 +88,19 @@ class PlayingState extends BasicGameState {
 				fg.flames.add( v.flame );
 			} else if (!v.isOnFire) {
 				fg.flames.remove( v.flame );
+			} else {
+				v.timeToLive -= 1;
 			}
+			if ( v.timeToLive == 0 ) {
+				v.visible = false;
+				fg.flames.remove( v.flame );
+				fg.tile_map.to_delete.push(k);
+				fg.tile_map.graph[(int)((v.getY() - 25) / 50)][(int)((v.getY() - 25) / 50)] = 0;
+			}
+		});
+
+		fg.tile_map.to_delete.forEach( (k) -> {
+			fg.map.remove(k);
 		});
 
 		fg.player.update( delta );
