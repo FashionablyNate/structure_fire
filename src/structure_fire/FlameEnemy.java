@@ -36,20 +36,32 @@ public class FlameEnemy extends Entity {
         if (reached_goal && !give_up) {
             pos_x = (int) Math.floor(this.getX() / 50);
             pos_y = (int) Math.floor(this.getY() / 50);
-            int pl_x, pl_y;
+            int pl_x = -1, pl_y = -1, pot_x, pot_y, old_length = 1000;
             if (fg.civilians.size() > 0) {
-                pl_x = fg.civilians.get(0)[1];
-                pl_y = fg.civilians.get(0)[0];
+                for ( int i = 0; i < fg.civilians.size(); i++ ) {
+                    pot_x = fg.civilians.get(i)[1];
+                    pot_y = fg.civilians.get(i)[0];
+                    fg.path = fg.pathFinder.findPath(null, pos_x, pos_y, pot_x, pot_y);
+                    if (fg.path != null) {
+                        if ( fg.path.getLength() < old_length ) {
+                            pl_x = pot_x; pl_y = pot_y;
+                            old_length = fg.path.getLength();
+                        }
+                    }
+                }
             } else {
                 pl_x = (int) Math.floor(fg.player.getX() / 50);
                 pl_y = (int) Math.floor(fg.player.getY() / 50) + 1;
             }
+            if (pl_x == -1 && pl_y == -1)
+                fg.path = null;
+            else
+                fg.path = fg.pathFinder.findPath(null, pos_x, pos_y, pl_x, pl_y);
 
             if (fg.map.containsKey( (pos_y * 1000) + pos_x )) {
                 fg.map.get( (pos_y * 1000) + pos_x ).isOnFire = true;
             }
 
-            fg.path = fg.pathFinder.findPath(null, pos_x, pos_y, pl_x, pl_y);
             if (
                     fg.path != null
             ) {

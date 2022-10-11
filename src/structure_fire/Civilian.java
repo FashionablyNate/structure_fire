@@ -11,5 +11,6 @@ public class Civilian extends Tile {
         );
         setScale( 0.95f );
         isCivilian = true;
+        timeToLive = 2000;
     }
 }
