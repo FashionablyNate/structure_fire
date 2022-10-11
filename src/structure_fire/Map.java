@@ -8,7 +8,7 @@ public class Map {
 
     public static void load( String level_name, StructureFireGame fg ) {
         try {
-            File myObj = new File( "src/structure_fire/resource/" + level_name + ".txt" );
+            File myObj = new File( "structure_fire/src/structure_fire/resource/" + level_name + ".txt" );
             Scanner myReader = new Scanner(myObj);
             int row = 0, col = 0;
             while (myReader.hasNextLine()) {
