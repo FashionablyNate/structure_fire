@@ -7,8 +7,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.Iterator;
-
 
 /**
  * This state is active when the Game is being played. In this state, sound is
@@ -46,9 +44,6 @@ class PlayingState extends BasicGameState {
 
 		fg.map.forEach( (k, v) -> {
 			v.render(g);
-			if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
-				fg.flames.add( v.flame );
-			}
 		});
 
 		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
@@ -97,16 +92,20 @@ class PlayingState extends BasicGameState {
 			int p_col = (int) Math.floor(p.getX() / 50);
 			if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
 				p.visible = false;
+				fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
 			}
 			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
 				p.visible = false;
 		}
 
-		for (Iterator<Burn> i = fg.flames.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
+		fg.map.forEach( (k, v) -> {
+			if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
+				fg.flames.add( v.flame );
+			} else if (!v.isOnFire) {
+				fg.flames.remove( v.flame );
 			}
-		}
+		});
+
 
 		fg.player.update( delta );
 	}
