@@ -69,41 +69,10 @@ class PlayingState extends BasicGameState {
 
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
+		fg.player.update( delta );
+
 		fg.tile_map.update_tiles( delta, fg );
 
-		for ( WaterParticle p : fg.water_stream ) {
-			p.update(delta);
-			int p_row = (int) Math.floor(p.getY() / 50);
-			int p_col = (int) Math.floor(p.getX() / 50);
-			if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
-				p.visible = false;
-				fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
-			}
-			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
-				p.visible = false;
-		}
-
-		fg.map.forEach( (k, v) -> {
-			if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
-				fg.flames.add( v.flame );
-			} else if (!v.isOnFire) {
-				fg.flames.remove( v.flame );
-			} else {
-				v.timeToLive -= delta;
-			}
-			if ( v.timeToLive < 0 ) {
-				v.visible = false;
-				fg.flames.remove( v.flame );
-				fg.tile_map.to_delete.push(k);
-				fg.tile_map.graph[(int)((v.getY() - 25) / 50)][(int)((v.getY() - 25) / 50)] = 0;
-			}
-		});
-
-		fg.tile_map.to_delete.forEach( (k) -> {
-			fg.map.remove(k);
-		});
-
-		fg.player.update( delta );
 		fg.fl_enemy.move( delta, fg );
 		fg.fl_enemy.update( delta );
 	}
