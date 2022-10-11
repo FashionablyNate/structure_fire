@@ -8,6 +8,7 @@ import org.newdawn.slick.Input;
 public class Player extends Entity {
     private Vector velocity;
     private boolean right;
+    public int coins = 0;
 
     public Player( final float x, final float y ) {
         super ( x, y );

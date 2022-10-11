@@ -55,13 +55,14 @@ class PlayingState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		StructureFireGame fg = (StructureFireGame)game;
-		
-		fg.player.render( g );
+
+		g.drawString("Coins: " + fg.player.coins, 10, 30);
 
 		fg.map.forEach( (k, v) -> {
 			if (v.visible)
 				v.render(g);
 		});
+		fg.player.render( g );
 		if (!fg.fl_enemy.give_up)
 			fg.fl_enemy.render( g );
 
@@ -83,7 +84,7 @@ class PlayingState extends BasicGameState {
 		fg.player.spray( input, fg );
 		fg.player.update( delta );
 
-		fg.tile_map.update_tiles( delta, fg );
+		fg.tile_map.update_tiles( delta, fg, input );
 
 		fg.fl_enemy.move( delta, fg );
 		fg.fl_enemy.update( delta );

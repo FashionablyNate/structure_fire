@@ -2,11 +2,9 @@ package structure_fire;
 
 import jig.Collision;
 import jig.ResourceManager;
-import jig.Vector;
 
-public class Ladder extends Tile {
-
-    public Ladder(float x, float y) {
+public class Coin extends Tile {
+    public Coin(float x, float y) {
         super(x, y);
         addImage(
                 ResourceManager.getImage(
@@ -14,9 +12,8 @@ public class Ladder extends Tile {
         );
         addImageWithBoundingBox(
                 ResourceManager.getImage(
-                        StructureFireGame.WOODEN_LADDER)
+                        StructureFireGame.COIN)
         );
-        isLadder = true;
         isCollideable = false;
     }
 
@@ -24,11 +21,13 @@ public class Ladder extends Tile {
     public void update(final int delta, Player player, int row, int col) {
         Collision collides = this.collides(player);
         if ( collides != null ) {
-            if ( row == 0 )
-                player.setVelocity(new Vector(player.getVelocity().getX(), -0.22f));
-            else {
-                player.setY(this.getY() - player.getCoarseGrainedHeight() - 2);
-                player.setVelocity(new Vector(player.getVelocity().getX(), 0.0f));
+            removeImage(
+                    ResourceManager.getImage(
+                            StructureFireGame.COIN)
+            );
+            if (!this.isCollected) {
+                player.coins++;
+                this.isCollected = true;
             }
         }
     }

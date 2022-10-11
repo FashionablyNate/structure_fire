@@ -8,20 +8,27 @@ public class Civilian extends Tile {
 
     public Civilian(float x, float y) {
         super(x, y);
+        addImage(
+                ResourceManager.getImage(
+                        StructureFireGame.BG_WOODEN_PLANKS)
+        );
         addImageWithBoundingBox(
                 ResourceManager.getImage(
                         StructureFireGame.CIVILIAN)
         );
-        setScale( 0.95f );
         isCivilian = true;
         timeToLive = 2000;
+        isCollideable = false;
     }
 
     @Override
     public void update(final int delta, Player player, int row, int col) {
         Collision collides = this.collides(player);
         if ( collides != null ) {
-            this.visible = false;
+            removeImage(
+                    ResourceManager.getImage(
+                            StructureFireGame.CIVILIAN)
+            );
             this.saved = true;
         }
     }
