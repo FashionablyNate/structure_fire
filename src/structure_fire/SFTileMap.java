@@ -93,6 +93,9 @@ public class SFTileMap implements TileBasedMap {
             if (fg.map.containsKey( (p_row * 1000) + p_col ) ) {
                 p.visible = false;
                 fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
+                if ( fg.map.get(  (p_row * 1000) + p_col ).isCivilian ) {
+                    fg.civilians.push(new int[]{p_row, p_col});
+                }
             }
             if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
                 p.visible = false;

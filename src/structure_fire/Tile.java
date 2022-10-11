@@ -8,6 +8,7 @@ import jig.Vector;
 public class Tile extends Entity {
 
     public boolean isLadder = false;
+    public boolean isCivilian = false;
     public boolean flammable = true;
     public boolean isOnFire = false;
     public int timeToLive = 8000;

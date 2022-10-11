@@ -10,5 +10,6 @@ public class Civilian extends Tile {
                         StructureFireGame.CIVILIAN)
         );
         setScale( 0.95f );
+        isCivilian = true;
     }
 }
