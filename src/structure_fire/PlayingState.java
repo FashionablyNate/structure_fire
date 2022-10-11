@@ -89,9 +89,9 @@ class PlayingState extends BasicGameState {
 			} else if (!v.isOnFire) {
 				fg.flames.remove( v.flame );
 			} else {
-				v.timeToLive -= 1;
+				v.timeToLive -= delta;
 			}
-			if ( v.timeToLive == 0 ) {
+			if ( v.timeToLive < 0 ) {
 				v.visible = false;
 				fg.flames.remove( v.flame );
 				fg.tile_map.to_delete.push(k);
