@@ -57,7 +57,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final String WATER_PARTICLE = "structure_fire/resource/water_particle.png";
 	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/GameOver.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
-	public static final String BANG_EXPLOSIONIMG_RSC = "structure_fire/resource/explosion.png";
+	public static final String BURN_FIRE_IMG_RSC = "structure_fire/resource/flames.png";
 	public static final String BANG_EXPLOSIONSND_RSC = "structure_fire/resource/explosion.wav";
 
 	public final int ScreenWidth;
@@ -66,8 +66,8 @@ public class StructureFireGame extends StateBasedGame {
 	Player player;
 	Map<Integer, Tile> map;
 	Random rand;
-
 	ArrayList<WaterParticle> water_stream;
+	ArrayList<Burn> flames;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -89,6 +89,7 @@ public class StructureFireGame extends StateBasedGame {
 		rand = new Random();
 		map = new HashMap<>();
 		water_stream = new ArrayList<>(1000);
+		flames = new ArrayList<Burn>(10);
 	}
 
 
@@ -114,7 +115,7 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(WATER_PARTICLE);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
-		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
+		ResourceManager.loadImage(BURN_FIRE_IMG_RSC);
 
 		Entity.antiAliasing = false;
 

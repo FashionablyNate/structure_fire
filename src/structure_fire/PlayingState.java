@@ -1,9 +1,5 @@
 package structure_fire;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -11,7 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import static com.apple.eio.FileManager.getResource;
+import java.util.Iterator;
 
 
 /**
@@ -48,11 +44,18 @@ class PlayingState extends BasicGameState {
 		fg.player.render( g );
 //		g.drawString("Bounces: " + bounces, 10, 30);
 
-		fg.map.forEach( (k, v) -> v.render( g ) );
+		fg.map.forEach( (k, v) -> {
+			v.render(g);
+			if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
+				fg.flames.add( v.flame );
+			}
+		});
 
 		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
 		for ( WaterParticle p : fg.water_stream )
 			p.render(g);
+		for (Burn b : fg.flames)
+			b.render(g);
 	}
 
 	@Override
@@ -97,6 +100,12 @@ class PlayingState extends BasicGameState {
 			}
 			if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
 				p.visible = false;
+		}
+
+		for (Iterator<Burn> i = fg.flames.iterator(); i.hasNext();) {
+			if (!i.next().isActive()) {
+				i.remove();
+			}
 		}
 
 		fg.player.update( delta );
