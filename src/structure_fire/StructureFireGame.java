@@ -12,6 +12,8 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.pathfinding.AStarPathFinder;
+import org.newdawn.slick.util.pathfinding.Path;
 
 /**
  * A Simple Game of Bounce.
@@ -68,6 +70,10 @@ public class StructureFireGame extends StateBasedGame {
 	Random rand;
 	ArrayList<WaterParticle> water_stream;
 	ArrayList<Burn> flames;
+	SFTileMap tile_map;
+	AStarPathFinder pathFinder;
+	Path path;
+	FlameEnemy fl_enemy;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -118,9 +124,6 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(BURN_FIRE_IMG_RSC);
 
 		Entity.antiAliasing = false;
-
-		player = new Player(container.getWidth() >> 1, container.getHeight() >> 1);
-
 	}
 	
 	public static void main(String[] args) {
