@@ -77,6 +77,7 @@ public class StructureFireGame extends StateBasedGame {
 	FlameEnemy fl_enemy;
 	Stack<int[]> civilians;
 	Stack<Sprinkler> sprinklers;
+	Integer sprinkler_inventory;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -101,6 +102,7 @@ public class StructureFireGame extends StateBasedGame {
 		flames = new ArrayList<Burn>(10);
 		civilians = new Stack<>();
 		sprinklers = new Stack<>();
+		sprinkler_inventory = 3;
 	}
 
 
@@ -141,6 +143,7 @@ public class StructureFireGame extends StateBasedGame {
 			app = new AppGameContainer(new StructureFireGame("Structure Fire", 600, 800));
 			app.setDisplayMode(600, 800, false);
 			app.setVSync(true);
+			app.setTargetFrameRate( 60 );
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();

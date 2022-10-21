@@ -74,6 +74,9 @@ class PlayingState extends BasicGameState {
 			b.render(g);
 		for (Sprinkler s : fg.sprinklers)
 			s.render(g);
+		for ( int i = 0; i < fg.sprinkler_inventory; i++ ) {
+			new Sprinkler( 50 + ( i * 50 ), 750 ).render(g);
+		}
 	}
 
 	@Override
@@ -89,7 +92,7 @@ class PlayingState extends BasicGameState {
 		fg.player.update( delta );
 
 		for (Sprinkler s : fg.sprinklers)
-			s.update( fg );
+			s.update( fg, delta );
 
 		fg.tile_map.update_tiles( delta, fg, input );
 
@@ -98,6 +101,7 @@ class PlayingState extends BasicGameState {
 
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).isOnFire);
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).saved);
+		fg.sprinklers.removeIf( x -> x.timeToSpray <= 0 );
 
 		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
 			fg.enterState(StructureFireGame.GAMEOVERSTATE);
