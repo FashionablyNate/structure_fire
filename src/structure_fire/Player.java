@@ -91,6 +91,24 @@ public class Player extends Entity {
         }
     }
 
+    public void powerup( Input input, StructureFireGame fg ) {
+        int row = (int) Math.floor(fg.player.getY() / 50);
+        int col = (int) Math.floor(fg.player.getX() / 50);
+        if ( input.isKeyDown(Input.KEY_E) ) {
+            if ( fg.sprinkler_inventory > 0 ) {
+                for (Sprinkler s : fg.sprinklers) {
+                    if (
+                        s.getX() == (col * 50) + 25 &&
+                        s.getY() == (row * 50) + 25
+                    ) {
+                        return;
+                    }
+                }
+                fg.sprinklers.push(new Sprinkler((col * 50) + 25, (row * 50) + 25));
+                fg.sprinkler_inventory--;
+            }
+        }
+    }
 
     public void setVelocity(final Vector v) {
         velocity = v;

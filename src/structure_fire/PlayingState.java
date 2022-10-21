@@ -1,5 +1,6 @@
 package structure_fire;
 
+import jig.Vector;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -71,6 +72,11 @@ class PlayingState extends BasicGameState {
 			p.render(g);
 		for (Burn b : fg.flames)
 			b.render(g);
+		for (Sprinkler s : fg.sprinklers)
+			s.render(g);
+		for ( int i = 0; i < fg.sprinkler_inventory; i++ ) {
+			new Sprinkler( 50 + ( i * 50 ), 750 ).render(g);
+		}
 	}
 
 	@Override
@@ -82,7 +88,11 @@ class PlayingState extends BasicGameState {
 
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
+		fg.player.powerup( input, fg );
 		fg.player.update( delta );
+
+		for (Sprinkler s : fg.sprinklers)
+			s.update( fg, delta );
 
 		fg.tile_map.update_tiles( delta, fg, input );
 
@@ -91,6 +101,7 @@ class PlayingState extends BasicGameState {
 
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).isOnFire);
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).saved);
+		fg.sprinklers.removeIf( x -> x.timeToSpray <= 0 );
 
 		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
 			fg.enterState(StructureFireGame.GAMEOVERSTATE);
