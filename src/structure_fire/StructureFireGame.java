@@ -52,6 +52,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final String PLAYER_CHARACTER_LEFT = "structure_fire/resource/fireman_left.png";
 	public static final String CIVILIAN = "structure_fire/resource/civilian.png";
 	public static final String COIN = "structure_fire/resource/coin.png";
+	public static final String SPRINKLER = "structure_fire/resource/sprinkler.png";
 	public static final String BG_WOODEN_PLANKS = "structure_fire/resource/bg_wooden_planks.png";
 	public static final String WOODEN_PLANKS = "structure_fire/resource/wooden_planks.png";
 	public static final String WOODEN_LADDER = "structure_fire/resource/wooden_ladder.png";
@@ -75,6 +76,7 @@ public class StructureFireGame extends StateBasedGame {
 	Path path;
 	FlameEnemy fl_enemy;
 	Stack<int[]> civilians;
+	Stack<Sprinkler> sprinklers;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -98,6 +100,7 @@ public class StructureFireGame extends StateBasedGame {
 		water_stream = new ArrayList<>(1000);
 		flames = new ArrayList<Burn>(10);
 		civilians = new Stack<>();
+		sprinklers = new Stack<>();
 	}
 
 
@@ -119,6 +122,7 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(PLAYER_CHARACTER_LEFT);
 		ResourceManager.loadImage(CIVILIAN);
 		ResourceManager.loadImage(COIN);
+		ResourceManager.loadImage(SPRINKLER);
 		ResourceManager.loadImage(BG_WOODEN_PLANKS);
 		ResourceManager.loadImage(WOODEN_PLANKS);
 		ResourceManager.loadImage(WOODEN_LADDER);

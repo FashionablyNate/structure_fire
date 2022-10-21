@@ -1,5 +1,6 @@
 package structure_fire;
 
+import jig.Vector;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -71,6 +72,8 @@ class PlayingState extends BasicGameState {
 			p.render(g);
 		for (Burn b : fg.flames)
 			b.render(g);
+		for (Sprinkler s : fg.sprinklers)
+			s.render(g);
 	}
 
 	@Override
@@ -82,7 +85,11 @@ class PlayingState extends BasicGameState {
 
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
+		fg.player.powerup( input, fg );
 		fg.player.update( delta );
+
+		for (Sprinkler s : fg.sprinklers)
+			s.update( fg );
 
 		fg.tile_map.update_tiles( delta, fg, input );
 

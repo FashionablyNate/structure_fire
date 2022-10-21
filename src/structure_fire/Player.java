@@ -91,6 +91,12 @@ public class Player extends Entity {
         }
     }
 
+    public void powerup( Input input, StructureFireGame fg ) {
+        int row = (int) Math.floor(fg.player.getY() / 50);
+        int col = (int) Math.floor(fg.player.getX() / 50);
+        if ( input.isKeyDown(Input.KEY_E) )
+            fg.sprinklers.push(new Sprinkler( (col * 50) + 25, (row * 50) + 25 ));
+    }
 
     public void setVelocity(final Vector v) {
         velocity = v;

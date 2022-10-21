@@ -91,8 +91,8 @@ public class FlameEnemy extends Entity {
     public void update(final int delta) {
 
         this.setVelocity(new Vector(
-            0.003f * (((goal_x * 50) + 25) - this.getX()) * delta,
-            0.003f * (((goal_y * 50) + 25) - this.getY()) * delta
+            0.001f * (((goal_x * 50) + 25) - this.getX()) * delta,
+            0.001f * (((goal_y * 50) + 25) - this.getY()) * delta
         ));
         float x_diff = (((goal_x * 50) + 25) - this.getX());
         float y_diff = (((goal_y * 50) + 25) - this.getY());
