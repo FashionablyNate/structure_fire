@@ -76,26 +76,45 @@ public class SFTileMap implements TileBasedMap {
         int col = (int) Math.floor(fg.player.getX() / 50);
         if (
                 (fg.map.containsKey(( row * 1000) + col ) &&
-                fg.map.get( (row * 1000) + col ).isLadder &&
-                input.isKeyDown(Input.KEY_SPACE)) ||
-                (fg.map.containsKey(( (row + 1) * 1000) + col ) &&
-                fg.map.get( ( (row + 1) * 1000) + col ).isLadder &&
-                input.isKeyDown(Input.KEY_SPACE))
+                fg.map.get( (row * 1000) + col ).isLadder )
         ) {
-            fg.player.setVelocity(new Vector(fg.player.getVelocity().getX(), -0.22f));
-//            fg.map.get( (row * 1000) + col ).update(delta, fg.player, 0, 0);
-            for ( int y = col - 1; y <= col + 1; y++ ) {
-                if ( y != 0 ) {
-                    if ( fg.map.containsKey( ( row * 1000 ) + y ) )
-                        fg.map.get( (row * 1000) + y ).update( delta, fg.player, 0, y - col );
+            if ( input.isKeyDown( Input.KEY_W) ) {
+                if (
+                        (fg.map.containsKey(( ( row - 1 ) * 1000) + col ) &&
+                        !fg.map.get( ( ( row - 1 ) * 1000) + col ).isCollideable )
+                ) {
+                    fg.player.setVelocity(new Vector(fg.player.getVelocity().getX(), -0.22f));
+                } else {
+                    fg.player.setY( (row * 50) + 25 );
+                    fg.player.setVelocity(new Vector(fg.player.getVelocity().getX(), 0.0f));
+                }
+            } else if ( input.isKeyDown( Input.KEY_S ) ) {
+                if (
+                        (fg.map.containsKey(( ( row + 1 ) * 1000) + col ) &&
+                        !fg.map.get( ( ( row + 1 ) * 1000) + col ).isCollideable )
+                ) {
+                    fg.player.setVelocity(new Vector(fg.player.getVelocity().getX(), 0.22f));
+                } else {
+                    fg.player.setY( (row * 50) + 25 );
+                    fg.player.setVelocity(new Vector(fg.player.getVelocity().getX(), 0.0f));
+                }
+            } else {
+                fg.player.setY( (row * 50) + 25 );
+                fg.player.setVelocity(new Vector(fg.player.getVelocity().getX(), 0.0f));
+            }
+            for (int y = col - 1; y <= col + 1; y++) {
+                if (y != 0) {
+                    if (fg.map.containsKey((row * 1000) + y))
+                        fg.map.get((row * 1000) + y).update(delta, fg.player, 0, y - col);
                 }
             }
         } else {
             for (int x = row - 1; x <= row + 1; x++) {
                 for (int y = col - 1; y <= col + 1; y++) {
                     if (fg.map.containsKey((x * 1000) + y)) {
-                        if (!fg.map.get((x * 1000) + y).isLadder)
+                        if (!fg.map.get((x * 1000) + y).isLadder) {
                             fg.map.get((x * 1000) + y).update(delta, fg.player, x - row, y - col);
+                        }
                     }
                 }
             }
