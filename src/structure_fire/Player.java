@@ -9,7 +9,7 @@ public class Player extends Entity {
     private Vector velocity;
     private boolean right;
     public int coins = 0;
-    private float water_level = 1.0f;
+    public float water_level = 1.0f;
 
     public Player( final float x, final float y ) {
         super ( x, y );

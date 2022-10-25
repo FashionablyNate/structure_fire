@@ -53,6 +53,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final String CIVILIAN = "structure_fire/resource/civilian.png";
 	public static final String COIN = "structure_fire/resource/coin.png";
 	public static final String SPRINKLER = "structure_fire/resource/sprinkler.png";
+	public static final String HYDRANT = "structure_fire/resource/hydrant.png";
 	public static final String BG_WOODEN_PLANKS = "structure_fire/resource/bg_wooden_planks.png";
 	public static final String WOODEN_PLANKS = "structure_fire/resource/wooden_planks.png";
 	public static final String WOODEN_LADDER = "structure_fire/resource/wooden_ladder.png";
@@ -127,6 +128,7 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(CIVILIAN);
 		ResourceManager.loadImage(COIN);
 		ResourceManager.loadImage(SPRINKLER);
+		ResourceManager.loadImage(HYDRANT);
 		ResourceManager.loadImage(BG_WOODEN_PLANKS);
 		ResourceManager.loadImage(WOODEN_PLANKS);
 		ResourceManager.loadImage(WOODEN_LADDER);
