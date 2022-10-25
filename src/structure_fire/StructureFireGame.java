@@ -58,6 +58,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final String WOODEN_LADDER = "structure_fire/resource/wooden_ladder.png";
 	public static final String STONE = "structure_fire/resource/stone.png";
 	public static final String WATER_PARTICLE = "structure_fire/resource/water_particle.png";
+	public static final String WATER_GAUGE = "structure_fire/resource/water_gauge.png";
 	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/GameOver.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
 	public static final String BURN_FIRE_IMG_RSC = "structure_fire/resource/flames.png";
@@ -78,6 +79,7 @@ public class StructureFireGame extends StateBasedGame {
 	Stack<int[]> civilians;
 	Stack<Sprinkler> sprinklers;
 	Integer sprinkler_inventory;
+	WaterGauge water_gauge;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -130,6 +132,7 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(WOODEN_LADDER);
 		ResourceManager.loadImage(STONE);
 		ResourceManager.loadImage(WATER_PARTICLE);
+		ResourceManager.loadImage(WATER_GAUGE);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BURN_FIRE_IMG_RSC);

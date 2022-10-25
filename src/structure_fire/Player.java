@@ -9,6 +9,7 @@ public class Player extends Entity {
     private Vector velocity;
     private boolean right;
     public int coins = 0;
+    private float water_level = 1.0f;
 
     public Player( final float x, final float y ) {
         super ( x, y );
@@ -75,7 +76,7 @@ public class Player extends Entity {
                     this.getY() - input.getAbsoluteMouseY() + modifier
             );
             WaterParticle particle;
-            if ( right ) {
+            if (right) {
                 particle = new WaterParticle(
                         this.getX() + (this.getCoarseGrainedWidth() / 2) - 5,
                         this.getY() + 10
@@ -87,8 +88,13 @@ public class Player extends Entity {
                 );
             }
             particle.setVelocity(direction.unit().negate());
-            fg.water_stream.add(particle);
+            if (this.water_level > 0.0) {
+                fg.water_stream.add(particle);
+                this.water_level -= 0.004;
+            }
         }
+        if ( water_level > 0.0 )
+            fg.water_gauge.setFrame( 11 - (int)Math.floor(this.water_level * 11) );
     }
 
     public void powerup( Input input, StructureFireGame fg ) {

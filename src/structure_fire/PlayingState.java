@@ -51,6 +51,7 @@ class PlayingState extends BasicGameState {
 				SFTileMap.WIDTH * SFTileMap.HEIGHT,
 				false
 		);
+		fg.water_gauge = new WaterGauge( 250, 750 );
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
@@ -74,9 +75,9 @@ class PlayingState extends BasicGameState {
 			b.render(g);
 		for (Sprinkler s : fg.sprinklers)
 			s.render(g);
-		for ( int i = 0; i < fg.sprinkler_inventory; i++ ) {
+		for ( int i = 0; i < fg.sprinkler_inventory; i++ )
 			new Sprinkler( 50 + ( i * 50 ), 750 ).render(g);
-		}
+		fg.water_gauge.render( g );
 	}
 
 	@Override
