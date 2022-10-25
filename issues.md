@@ -7,8 +7,8 @@
 - **[5]** Coins - An entity that can be collected to buy powerups.
 - **[6]** Sprinkler - A powerup that can be purchased with collected coins. Can be deployed, and will spew water for a set amount of time where deployed.
 - **[7]** Water gauge - A bar that depletes as the fireman sprays water, when it’s empty the fireman can’t spray water until it’s replenished.
+- **[8]** Fire hydrant - An object on the map that refuels water guage on collision with fireman.
 
 ## Open Issues ##
- 
-- **[8]** Fire hydrant - An object on the map that refuels water guage on collision with fireman.
+
 - **[9]** Score tracker - An element on the UI that reflects the players current score for the level. Will account for civilians saved, how much of the building is burned, and coins collected.
