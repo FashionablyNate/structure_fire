@@ -87,6 +87,17 @@ public class SFTileMap implements TileBasedMap {
     public void update_tiles( int delta, StructureFireGame fg, Input input ) {
         int row = (int) Math.floor(fg.player.getY() / 50);
         int col = (int) Math.floor(fg.player.getX() / 50);
+
+        if (
+            (fg.map.containsKey(( row * 1000) + col ) &&
+            fg.map.get( (row * 1000) + col ).isOnFire )
+        ) {
+            if ( fg.player.flashing <= 0 ) {
+                fg.player.health--;
+                fg.player.flashing = 4000;
+            }
+        }
+
         if (
                 (fg.map.containsKey(( row * 1000) + col ) &&
                 fg.map.get( (row * 1000) + col ).isLadder )

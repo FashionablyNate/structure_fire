@@ -67,7 +67,7 @@ class PlayingState extends BasicGameState {
 			if (v.visible)
 				v.render(g);
 		});
-		fg.player.render( g );
+		fg.player.render(g);
 		if (!fg.fl_enemy.give_up)
 			fg.fl_enemy.render( g );
 
@@ -91,6 +91,10 @@ class PlayingState extends BasicGameState {
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
 		fg.player.powerup( input, fg );
+
+		if ( fg.player.flashing > 0 )
+			fg.player.flash( delta );
+
 		fg.player.update( delta );
 
 		for (Sprinkler s : fg.sprinklers)
@@ -105,7 +109,10 @@ class PlayingState extends BasicGameState {
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).saved);
 		fg.sprinklers.removeIf( x -> x.timeToSpray <= 0 );
 
-		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
+		if (
+			fg.flames.size() == 0 && fg.fl_enemy.give_up ||
+			fg.player.health <= 0
+		) {
 			fg.enterState(StructureFireGame.GAMEOVERSTATE);
 		}
 

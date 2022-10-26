@@ -49,6 +49,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final int GAMEOVERSTATE = 2;
 	
 	public static final String PLAYER_CHARACTER_RIGHT = "structure_fire/resource/fireman_right.png";
+	public static final String PLAYER_CHARACTER_FLASH = "structure_fire/resource/fireman_flash.png";
 	public static final String PLAYER_CHARACTER_LEFT = "structure_fire/resource/fireman_left.png";
 	public static final String CIVILIAN = "structure_fire/resource/civilian.png";
 	public static final String COIN = "structure_fire/resource/coin.png";
@@ -61,6 +62,7 @@ public class StructureFireGame extends StateBasedGame {
 	public static final String WOODEN_LADDER = "structure_fire/resource/wooden_ladder.png";
 	public static final String STONE = "structure_fire/resource/stone.png";
 	public static final String SKY = "structure_fire/resource/background.png";
+	public static final String HEART = "structure_fire/resource/heart.png";
 	public static final String WATER_PARTICLE = "structure_fire/resource/water_particle.png";
 	public static final String WATER_GAUGE = "structure_fire/resource/water_gauge.png";
 	public static final String LEXICON = "structure_fire/resource/lexicon.png";
@@ -129,6 +131,7 @@ public class StructureFireGame extends StateBasedGame {
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(PLAYER_CHARACTER_RIGHT);
+		ResourceManager.loadImage(PLAYER_CHARACTER_FLASH);
 		ResourceManager.loadImage(PLAYER_CHARACTER_LEFT);
 		ResourceManager.loadImage(CIVILIAN);
 		ResourceManager.loadImage(COIN);
@@ -141,6 +144,7 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(WOODEN_LADDER);
 		ResourceManager.loadImage(STONE);
 		ResourceManager.loadImage(SKY);
+		ResourceManager.loadImage(HEART);
 		ResourceManager.loadImage(WATER_PARTICLE);
 		ResourceManager.loadImage(WATER_GAUGE);
 		ResourceManager.loadImage(LEXICON);

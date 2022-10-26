@@ -56,6 +56,9 @@ public class HUD {
         ttf.drawString(500, 710, "x " + fg.player.civilians_saved, Color.white);
         for ( int i = 0; i < fg.sprinkler_inventory; i++ )
             new SprinklerHUDIcon( 50, 600 + ( i * 50 ) ).render(g);
+        for ( int i = 0; i < fg.player.health; i++ ) {
+            new Heart( 330, 640 + ( i * 45 ) ).render(g);
+        }
     }
 
     public void update( SFTileMap tm ) {

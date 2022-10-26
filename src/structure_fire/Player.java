@@ -11,6 +11,9 @@ public class Player extends Entity {
     public int coins = 0;
     public int civilians_saved = 0;
     public float water_level = 1.0f;
+    public int health = 3;
+    public int flashing = 0;
+    private boolean flashed = false;
 
     public Player( final float x, final float y ) {
         super ( x, y );
@@ -123,5 +126,22 @@ public class Player extends Entity {
 
     public Vector getVelocity() {
         return velocity;
+    }
+
+    public void flash( final int delta ) {
+        if ( this.flashing >= 3900 )
+            this.setVelocity(new Vector( this.getVelocity().getX(), -1.0f ) );
+        this.flashing -= delta;
+        if ( !flashed ) {
+            if ( this.flashing < 0 )
+                return;
+            this.addImage(ResourceManager.getImage(
+                    StructureFireGame.PLAYER_CHARACTER_FLASH));
+            this.flashed = true;
+        } else {
+            this.removeImage(ResourceManager.getImage(
+                    StructureFireGame.PLAYER_CHARACTER_FLASH));
+            this.flashed = false;
+        }
     }
 }
