@@ -165,9 +165,9 @@ class PlayingState extends BasicGameState {
 
 		fg.hud.update( fg.tile_map );
 
-		if ( fg.player.health <= 0 )
-			fg.enterState(StructureFireGame.GAMEOVERSTATE);
-		if ( fg.flames.size() == 0 ) {
+//		if ( fg.player.health <= 0 )
+//			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+		if ( fg.flames.size() == 0 && !fg.lost ) {
 			for ( FlameEnemy f : fg.fl_enemy ) {
 				if ( !f.give_up )
 					return;
@@ -190,6 +190,17 @@ class PlayingState extends BasicGameState {
 				fg.enterState(StructureFireGame.GAMEOVERSTATE);
 			}
 			this.enter(container, game);
+		}
+		if ( fg.lost ) {
+			fg.civilians_score += fg.player.civilians_saved;
+			fg.coins_score += fg.player.coins;
+			fg.percentage_score += ((int) Math.ceil(
+					100 * fg.tile_map.flammable_tiles_left /
+							fg.tile_map.initial_flammable_tiles
+			));
+			fg.civilians.clear();
+			this.level = "level_one";
+			fg.lost = false;
 		}
 	}
 
