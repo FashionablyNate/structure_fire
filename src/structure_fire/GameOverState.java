@@ -70,26 +70,21 @@ class GameOverState extends BasicGameState {
 		header_ttf.drawString(120, 150, "GAME OVER", org.newdawn.slick.Color.red);
 
 		this.civilian.render( g );
-		ttf.drawString(270, 285, "x " + fg.player.civilians_saved, org.newdawn.slick.Color.white);
+		ttf.drawString(270, 285, "x " + fg.civilians_score, org.newdawn.slick.Color.white);
 		this.coin.render( g );
-		ttf.drawString(270, 375, "x " + fg.player.coins, org.newdawn.slick.Color.white);
+		ttf.drawString(270, 375, "x " + fg.coins_score, org.newdawn.slick.Color.white);
 		this.house.render( g );
 		ttf.drawString(
 				270,
 				480,
-				": " + (int) Math.ceil(
-					100 * fg.tile_map.flammable_tiles_left /
-					fg.tile_map.initial_flammable_tiles
-				) + "%", org.newdawn.slick.Color.white
+				": " + fg.percentage_score
+				+ "%", org.newdawn.slick.Color.white
 		);
 		header_ttf.drawString(
 				120,
 				580,
 				"Score: " +
-				((int) Math.ceil(
-					100 * fg.tile_map.flammable_tiles_left /
-					fg.tile_map.initial_flammable_tiles
-				)) * (fg.player.coins + 1) * fg.player.civilians_saved,
+				fg.percentage_score * (fg.coins_score + 1) * (fg.civilians_score + 1),
 				org.newdawn.slick.Color.white
 		);
 

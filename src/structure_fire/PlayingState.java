@@ -23,20 +23,17 @@ import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 class PlayingState extends BasicGameState {
 	int bounces;
 	Background sky;
-	
+	private String level;
+
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 
 		StructureFireGame fg = (StructureFireGame)game;
 
-		fg.tile_map = new SFTileMap( "level_one", fg );
-		fg.pathFinder = new AStarPathFinder(
-				fg.tile_map,
-				SFTileMap.WIDTH * SFTileMap.HEIGHT,
-				false
-		);
+		this.level = "level_one";
 		fg.hud = new HUD( fg );
+		sky = new Background(fg.ScreenWidth >> 1, fg.ScreenHeight >> 1);
 	}
 
 	@Override
@@ -46,14 +43,12 @@ class PlayingState extends BasicGameState {
 
 		StructureFireGame fg = (StructureFireGame)game;
 
-		fg.tile_map = new SFTileMap( "level_one", fg );
+		fg.tile_map = new SFTileMap( this.level, fg );
 		fg.pathFinder = new AStarPathFinder(
 				fg.tile_map,
 				SFTileMap.WIDTH * SFTileMap.HEIGHT,
 				false
 		);
-		fg.hud = new HUD( fg );
-		sky = new Background(fg.ScreenWidth >> 1, fg.ScreenHeight >> 1);
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
@@ -147,7 +142,21 @@ class PlayingState extends BasicGameState {
 				if ( !f.give_up )
 					return;
 			}
-			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+			fg.civilians_score += fg.player.civilians_saved;
+			fg.coins_score += fg.player.coins;
+			fg.percentage_score += ((int) Math.ceil(
+				100 * fg.tile_map.flammable_tiles_left /
+				fg.tile_map.initial_flammable_tiles
+			));
+			if (this.level.matches("level_one"))
+				this.level = "level_two";
+			else if (this.level.matches("level_two"))
+				this.level = "level_three";
+			else if (this.level.matches("level_three")) {
+				this.level = "level_one";
+				fg.enterState(StructureFireGame.GAMEOVERSTATE);
+			}
+			this.enter(container, game);
 		}
 	}
 

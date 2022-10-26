@@ -90,6 +90,7 @@ public class StructureFireGame extends StateBasedGame {
 	Integer sprinkler_inventory;
 	WaterGauge water_gauge;
 	HUD hud;
+	Integer coins_score, civilians_score, percentage_score;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -116,6 +117,9 @@ public class StructureFireGame extends StateBasedGame {
 		sprinklers = new Stack<>();
 		sprinkler_inventory = 3;
 		fl_enemy = new ArrayList<>();
+		coins_score = 0;
+		civilians_score = 0;
+		percentage_score = 0;
 	}
 
 
