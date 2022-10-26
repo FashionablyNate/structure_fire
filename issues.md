@@ -10,8 +10,8 @@
 - **[8]** Fire hydrant - An object on the map that refuels water guage on collision with fireman.
 - **[9]** Score tracker - An element on the UI that reflects the players current score for the level. Will account for civilians saved, how much of the building is burned, and coins collected.
 - **[10]** Health system - Make the fire defeatable, as well as the player
+- **[11]** Splash screens - Make intro screen and game over screen more interesting
 
 ## Open Issues ##
 
-- **[11]** Splash screens - Make intro screen and game over screen more interesting
 - **[12]** More levels - Create more levels

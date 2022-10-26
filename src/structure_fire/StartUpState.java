@@ -1,15 +1,17 @@
 package structure_fire;
 
+import java.awt.*;
+import java.awt.Font;
 import java.util.Iterator;
 
 import jig.ResourceManager;
 
-import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 
 /**
  * This state is active prior to the Game starting. In this state, sound is
@@ -23,28 +25,58 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 class StartUpState extends BasicGameState {
 
+	Font font;
+	TrueTypeFont ttf;
+	Background sky;
+
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		StructureFireGame fg = (StructureFireGame)game;
+		this.font = new Font("Serif", Font.PLAIN, 64);
+		this.ttf = new TrueTypeFont(this.font, true);
+		sky = new Background(fg.ScreenWidth >> 1, fg.ScreenHeight >> 1);
+		fg.tile_map = new SFTileMap( "level_one", fg );
+		fg.pathFinder = new AStarPathFinder(
+				fg.tile_map,
+				SFTileMap.WIDTH * SFTileMap.HEIGHT,
+				false
+		);
 	}
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		StructureFireGame fg = (StructureFireGame)game;
+		this.font = new Font("Serif", Font.PLAIN, 64);
+		this.ttf = new TrueTypeFont(this.font, true);
+		sky = new Background(fg.ScreenWidth >> 1, fg.ScreenHeight >> 1);
 		container.setSoundOn(false);
+		fg.tile_map = new SFTileMap( "level_one", fg );
+		fg.pathFinder = new AStarPathFinder(
+				fg.tile_map,
+				SFTileMap.WIDTH * SFTileMap.HEIGHT,
+				false
+		);
 	}
 
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		StructureFireGame bg = (StructureFireGame)game;
-		
-		bg.player.render(g);
-//		g.drawString("Bounces: ?", 10, 30);
-//		for (Bang b : bg.explosions)
-//			b.render(g);
-		g.drawImage(ResourceManager.getImage(StructureFireGame.STARTUP_BANNER_RSC),
-				225, 270);		
+		StructureFireGame fg = (StructureFireGame)game;
+		this.sky.render( g );
+		fg.map.forEach( (k, v) -> {
+			if (v.visible)
+				v.render(g);
+		});
+		for (Burn b : fg.flames)
+			b.render(g);
+		this.ttf.drawString(
+				(fg.ScreenWidth >> 1) - 200,
+				(fg.ScreenHeight >> 1) - 50,
+				"Press Space...",
+				Color.white
+		);
 	}
 
 	@Override
@@ -52,34 +84,23 @@ class StartUpState extends BasicGameState {
 			int delta) throws SlickException {
 
 		Input input = container.getInput();
-		StructureFireGame bg = (StructureFireGame)game;
+		StructureFireGame fg = (StructureFireGame)game;
 
-		if (input.isKeyDown(Input.KEY_SPACE))
-			bg.enterState(StructureFireGame.PLAYINGSTATE);
-		
-//		// structure_fire the ball...
-//		boolean bounced = false;
-//		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-//				|| bg.ball.getCoarseGrainedMinX() < 0) {
-//			bg.ball.bounce(90);
-//			bounced = true;
-//		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-//				|| bg.ball.getCoarseGrainedMinY() < 0) {
-//			bg.ball.bounce(0);
-//			bounced = true;
-//		}
-//		if (bounced) {
-//			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-//		}
-//		bg.ball.update(delta);
-//
-//		// check if there are any finished explosions, if so remove them
-//		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
-//			if (!i.next().isActive()) {
-//				i.remove();
-//			}
-//		}
+		if ( fg.flames.size() == 0 ) {
+			fg.map.clear();
+			this.init(container, game);
+			fg.map.get((1000 * (fg.rand.nextInt(9) + 2)) + fg.rand.nextInt(9) + 2).isOnFire = true;
+			fg.map.get((1000 * (fg.rand.nextInt(9) + 2)) + fg.rand.nextInt(9) + 2).isOnFire = true;
+			fg.map.get((1000 * (fg.rand.nextInt(9) + 2)) + fg.rand.nextInt(9) + 2).isOnFire = true;
+		}
 
+		fg.tile_map.update_tiles( delta, fg, input );
+
+		if (input.isKeyDown(Input.KEY_SPACE)) {
+			fg.map.clear();
+			fg.flames.clear();
+			fg.enterState(StructureFireGame.PLAYINGSTATE);
+		}
 	}
 
 	@Override
