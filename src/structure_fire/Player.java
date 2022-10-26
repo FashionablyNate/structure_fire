@@ -8,6 +8,12 @@ import org.newdawn.slick.Input;
 public class Player extends Entity {
     private Vector velocity;
     private boolean right;
+    public int coins = 0;
+    public int civilians_saved = 0;
+    public float water_level = 1.0f;
+    public int health = 3;
+    public int flashing = 0;
+    private boolean flashed = false;
 
     public Player( final float x, final float y ) {
         super ( x, y );
@@ -74,7 +80,7 @@ public class Player extends Entity {
                     this.getY() - input.getAbsoluteMouseY() + modifier
             );
             WaterParticle particle;
-            if ( right ) {
+            if (right) {
                 particle = new WaterParticle(
                         this.getX() + (this.getCoarseGrainedWidth() / 2) - 5,
                         this.getY() + 10
@@ -86,10 +92,33 @@ public class Player extends Entity {
                 );
             }
             particle.setVelocity(direction.unit().negate());
-            fg.water_stream.add(particle);
+            if (this.water_level > 0.0) {
+                fg.water_stream.add(particle);
+                this.water_level -= 0.004;
+            }
         }
+        if ( water_level > 0.0 )
+            fg.water_gauge.setFrame( 11 - (int)Math.floor(this.water_level * 11) );
     }
 
+    public void powerup( Input input, StructureFireGame fg ) {
+        int row = (int) Math.floor(fg.player.getY() / 50);
+        int col = (int) Math.floor(fg.player.getX() / 50);
+        if ( input.isKeyDown(Input.KEY_E) ) {
+            if ( fg.sprinkler_inventory > 0 ) {
+                for (Sprinkler s : fg.sprinklers) {
+                    if (
+                        s.getX() == (col * 50) + 25 &&
+                        s.getY() == (row * 50) + 25
+                    ) {
+                        return;
+                    }
+                }
+                fg.sprinklers.push(new Sprinkler((col * 50) + 25, (row * 50) + 25));
+                fg.sprinkler_inventory--;
+            }
+        }
+    }
 
     public void setVelocity(final Vector v) {
         velocity = v;
@@ -97,5 +126,22 @@ public class Player extends Entity {
 
     public Vector getVelocity() {
         return velocity;
+    }
+
+    public void flash( final int delta ) {
+        if ( this.flashing >= 3900 )
+            this.setVelocity(new Vector( this.getVelocity().getX(), -1.0f ) );
+        this.flashing -= delta;
+        if ( !flashed ) {
+            if ( this.flashing < 0 )
+                return;
+            this.addImage(ResourceManager.getImage(
+                    StructureFireGame.PLAYER_CHARACTER_FLASH));
+            this.flashed = true;
+        } else {
+            this.removeImage(ResourceManager.getImage(
+                    StructureFireGame.PLAYER_CHARACTER_FLASH));
+            this.flashed = false;
+        }
     }
 }

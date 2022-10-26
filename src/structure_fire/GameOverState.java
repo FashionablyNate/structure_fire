@@ -1,5 +1,6 @@
 package structure_fire;
 
+import java.awt.*;
 import java.util.Iterator;
 
 import jig.ResourceManager;
@@ -7,6 +8,7 @@ import jig.ResourceManager;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
@@ -26,7 +28,12 @@ class GameOverState extends BasicGameState {
 	
 
 	private int timer;
-	private int lastKnownBounces; // the user's score, to be displayed, but not updated.
+	private Font font, header_font;
+	private TrueTypeFont ttf, header_ttf;
+	private Coin coin;
+	private Civilian civilian;
+	private HouseHUDIcon house;
+
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -35,21 +42,51 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		this.header_font = new Font("Serif",Font.PLAIN, 64);
+		this.header_ttf = new TrueTypeFont(this.header_font, true);
+		this.font = new Font("Serif",Font.PLAIN, 32);
+		this.ttf = new TrueTypeFont(this.font, true);
+		this.civilian = new Civilian(170, 300);
+		this.civilian.removeImage(
+				ResourceManager.getImage(
+						StructureFireGame.BG_WOODEN_PLANKS)
+		);
+		this.coin = new Coin(170, 400);
+		this.coin.removeImage(
+				ResourceManager.getImage(
+						StructureFireGame.BG_WOODEN_PLANKS)
+		);
+		this.house = new HouseHUDIcon(170, 500);
 		timer = 4000;
 	}
 
-	public void setUserScore(int bounces) {
-		lastKnownBounces = bounces;
-	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 
-		StructureFireGame bg = (StructureFireGame)game;
-		g.drawString("Bounces: " + lastKnownBounces, 10, 30);
-		g.drawImage(ResourceManager.getImage(StructureFireGame.GAMEOVER_BANNER_RSC), 225,
-				270);
+		StructureFireGame fg = (StructureFireGame)game;
+
+		header_ttf.drawString(120, 150, "GAME OVER", org.newdawn.slick.Color.red);
+
+		this.civilian.render( g );
+		ttf.drawString(270, 285, "x " + fg.civilians_score, org.newdawn.slick.Color.white);
+		this.coin.render( g );
+		ttf.drawString(270, 375, "x " + fg.coins_score, org.newdawn.slick.Color.white);
+		this.house.render( g );
+		ttf.drawString(
+				270,
+				480,
+				": " + fg.percentage_score
+				+ "%", org.newdawn.slick.Color.white
+		);
+		header_ttf.drawString(
+				120,
+				580,
+				"Score: " +
+				fg.percentage_score * (fg.coins_score + 1) * (fg.civilians_score + 1),
+				org.newdawn.slick.Color.white
+		);
 
 	}
 
@@ -61,14 +98,6 @@ class GameOverState extends BasicGameState {
 		timer -= delta;
 		if (timer <= 0)
 			game.enterState(StructureFireGame.STARTUPSTATE, new EmptyTransition(), new HorizontalSplitTransition() );
-
-		// check if there are any finished explosions, if so remove them
-//		for (Iterator<Bang> i = ((StructureFireGame)game).explosions.iterator(); i.hasNext();) {
-//			if (!i.next().isActive()) {
-//				i.remove();
-//			}
-//		}
-
 	}
 
 	@Override
