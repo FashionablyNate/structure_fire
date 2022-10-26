@@ -36,7 +36,6 @@ class PlayingState extends BasicGameState {
 				SFTileMap.WIDTH * SFTileMap.HEIGHT,
 				false
 		);
-		fg.fl_enemy.give_up = false;
 		fg.hud = new HUD( fg );
 	}
 
@@ -67,9 +66,11 @@ class PlayingState extends BasicGameState {
 			if (v.visible)
 				v.render(g);
 		});
-		fg.player.render( g );
-		if (!fg.fl_enemy.give_up)
-			fg.fl_enemy.render( g );
+		fg.player.render(g);
+		for (FlameEnemy f : fg.fl_enemy) {
+			if (!f.give_up)
+				f.render(g);
+		}
 
 		fg.water_stream.removeIf(waterParticle -> !waterParticle.visible);
 		for ( WaterParticle p : fg.water_stream )
@@ -79,6 +80,12 @@ class PlayingState extends BasicGameState {
 		for (Sprinkler s : fg.sprinklers)
 			s.render(g);
 		fg.hud.render( g, fg );
+
+		if (fg.path != null) {
+			for (int i = 1; i < fg.path.getLength(); i++) {
+				new PathImage((fg.path.getX(i) * 50) + 25, (fg.path.getY(i) * 50) + 25).render(g);
+			}
+		}
 	}
 
 	@Override
@@ -91,6 +98,10 @@ class PlayingState extends BasicGameState {
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
 		fg.player.powerup( input, fg );
+
+		if ( fg.player.flashing > 0 )
+			fg.player.flash( delta );
+
 		fg.player.update( delta );
 
 		for (Sprinkler s : fg.sprinklers)
@@ -98,18 +109,46 @@ class PlayingState extends BasicGameState {
 
 		fg.tile_map.update_tiles( delta, fg, input );
 
-		fg.fl_enemy.move( delta, fg );
-		fg.fl_enemy.update( delta );
+		for (FlameEnemy f : fg.fl_enemy) {
+			f.move(delta, fg);
+			f.update(delta);
+		}
+		if (fg.fl_enemy.isEmpty() && fg.tile_map.time_since_flame_killed > 1000) {
+			outer:
+			for (int x = 11; x >= 0; x--) {
+				for (int y = 11; y >= 0; y--) {
+					if (
+							fg.map.containsKey((x * 1000) + y) &&
+									fg.map.get((x * 1000) + y).isOnFire
+					) {
+						fg.fl_enemy.add(new FlameEnemy(
+								fg.map.get((x * 1000) + y).getX(),
+								fg.map.get((x * 1000) + y).getY()
+						));
+						break outer;
+					}
+				}
+			}
+			fg.tile_map.time_since_flame_killed = 0;
+		} else if (fg.fl_enemy.isEmpty()) {
+			fg.tile_map.time_since_flame_killed += delta;
+		}
 
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).isOnFire);
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).saved);
 		fg.sprinklers.removeIf( x -> x.timeToSpray <= 0 );
 
-		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
+		fg.hud.update( fg.tile_map );
+
+		if ( fg.player.health <= 0 )
+			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+		if ( fg.flames.size() == 0 ) {
+			for ( FlameEnemy f : fg.fl_enemy ) {
+				if ( !f.give_up )
+					return;
+			}
 			fg.enterState(StructureFireGame.GAMEOVERSTATE);
 		}
-
-		fg.hud.update( fg.tile_map );
 	}
 
 	@Override
