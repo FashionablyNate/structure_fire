@@ -69,6 +69,8 @@ public class StructureFireGame extends StateBasedGame {
 	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/GameOver.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
 	public static final String BURN_FIRE_IMG_RSC = "structure_fire/resource/flames.png";
+	public static final String BURN_FIRE_AI = "structure_fire/resource/flames_ai.png";
+	public static final String PATH = "structure_fire/resource/path.png";
 	public static final String BANG_EXPLOSIONSND_RSC = "structure_fire/resource/explosion.wav";
 
 	public final int ScreenWidth;
@@ -82,7 +84,7 @@ public class StructureFireGame extends StateBasedGame {
 	SFTileMap tile_map;
 	AStarPathFinder pathFinder;
 	Path path;
-	FlameEnemy fl_enemy;
+	ArrayList<FlameEnemy> fl_enemy;
 	Stack<int[]> civilians;
 	Stack<Sprinkler> sprinklers;
 	Integer sprinkler_inventory;
@@ -113,6 +115,7 @@ public class StructureFireGame extends StateBasedGame {
 		civilians = new Stack<>();
 		sprinklers = new Stack<>();
 		sprinkler_inventory = 3;
+		fl_enemy = new ArrayList<>();
 	}
 
 
@@ -151,6 +154,8 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BURN_FIRE_IMG_RSC);
+		ResourceManager.loadImage(BURN_FIRE_AI);
+		ResourceManager.loadImage(PATH);
 
 		Entity.antiAliasing = false;
 	}

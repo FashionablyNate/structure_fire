@@ -18,6 +18,7 @@ public class SFTileMap implements TileBasedMap {
     public float flammable_tiles_left;
     public float initial_flammable_tiles;
     private Stack<Integer> to_delete;
+    public int time_since_flame_killed = 0;
 
     SFTileMap(String level_name, StructureFireGame fg ) {
         graph = load( level_name, fg );
@@ -33,43 +34,54 @@ public class SFTileMap implements TileBasedMap {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 for (String s : data.split(" ")) {
-                    if ( s.trim().equals("1") ) {
-                        fg.map.put((row * 1000) + col, new Planks((col * 50) + 25, (row * 50) + 25));
-                        graph[row][col] = 2;
-                        this.flammable_tiles_left++;
-                    } else if ( s.trim().equals("2") ) {
-                        fg.map.put((row * 1000) + col, new Ladder((col * 50) + 25, (row * 50) + 25));
-                        graph[row][col] = 1;
-                        this.flammable_tiles_left++;
-                    } else if ( s.trim().equals("3") ) {
-                        fg.map.put((row * 1000) + col, new Stone((col * 50) + 25, (row * 50) + 25));
-                        graph[row][col] = 0;
-                    } else if ( s.trim().equals("4") ) {
-                        fg.map.put((row * 1000) + col, new Planks((col * 50) + 25, (row * 50) + 25));
-                        fg.fl_enemy = new FlameEnemy((col * 50) + 25, (row * 50) + 25);
-                        graph[row][col] = 2;
-                        this.flammable_tiles_left++;
-                    } else if ( s.trim().equals("5") ) {
-                        fg.player = new Player( (col * 50) + 25, (row * 50) + 25 );
-                        graph[row][col] = 0;
-                    } else if ( s.trim().equals("6") ) {
-                        fg.map.put((row * 1000) + col, new Civilian( (col * 50) + 25, (row * 50) + 25 ));
-                        fg.civilians.push(new int[]{row, col});
-                        graph[row][col] = 2;
-                        this.flammable_tiles_left++;
-                    } else if ( s.trim().equals("7") ) {
-                        fg.map.put((row * 1000) + col, new Coin( (col * 50) + 25, (row * 50) + 25 ));
-                        graph[row][col] = 2;
-                        this.flammable_tiles_left++;
-                    } else if ( s.trim().equals("8") ) {
-                        fg.map.put((row * 1000) + col, new BGPlanks( (col * 50) + 25, (row * 50) + 25 ));
-                        graph[row][col] = 2;
-                        this.flammable_tiles_left++;
-                    } else if ( s.trim().equals("H") ) {
-                        fg.map.put((row * 1000) + col, new FireHydrant( (col * 50) + 25, (row * 50) + 25 ));
-                        graph[row][col] = 0;
-                    } else {
-                        graph[row][col] = 0;
+                    switch (s.trim()) {
+                        case "1":
+                            fg.map.put((row * 1000) + col, new Planks((col * 50) + 25, (row * 50) + 25));
+                            graph[row][col] = 2;
+                            this.flammable_tiles_left++;
+                            break;
+                        case "2":
+                            fg.map.put((row * 1000) + col, new Ladder((col * 50) + 25, (row * 50) + 25));
+                            graph[row][col] = 1;
+                            this.flammable_tiles_left++;
+                            break;
+                        case "3":
+                            fg.map.put((row * 1000) + col, new Stone((col * 50) + 25, (row * 50) + 25));
+                            graph[row][col] = 0;
+                            break;
+                        case "4":
+                            fg.map.put((row * 1000) + col, new Planks((col * 50) + 25, (row * 50) + 25));
+                            fg.fl_enemy.add(new FlameEnemy((col * 50) + 25, (row * 50) + 25));
+                            graph[row][col] = 2;
+                            this.flammable_tiles_left++;
+                            break;
+                        case "5":
+                            fg.player = new Player((col * 50) + 25, (row * 50) + 25);
+                            graph[row][col] = 0;
+                            break;
+                        case "6":
+                            fg.map.put((row * 1000) + col, new Civilian((col * 50) + 25, (row * 50) + 25));
+                            fg.civilians.push(new int[]{row, col});
+                            graph[row][col] = 2;
+                            this.flammable_tiles_left++;
+                            break;
+                        case "7":
+                            fg.map.put((row * 1000) + col, new Coin((col * 50) + 25, (row * 50) + 25));
+                            graph[row][col] = 2;
+                            this.flammable_tiles_left++;
+                            break;
+                        case "8":
+                            fg.map.put((row * 1000) + col, new BGPlanks((col * 50) + 25, (row * 50) + 25));
+                            graph[row][col] = 2;
+                            this.flammable_tiles_left++;
+                            break;
+                        case "H":
+                            fg.map.put((row * 1000) + col, new FireHydrant((col * 50) + 25, (row * 50) + 25));
+                            graph[row][col] = 0;
+                            break;
+                        default:
+                            graph[row][col] = 0;
+                            break;
                     }
                     col++;
                 }
@@ -144,22 +156,6 @@ public class SFTileMap implements TileBasedMap {
             }
         }
 
-        for ( WaterParticle p : fg.water_stream ) {
-            p.update(delta);
-            int p_row = (int) Math.floor(p.getY() / 50);
-            int p_col = (int) Math.floor(p.getX() / 50);
-            if (fg.map.containsKey( (p_row * 1000) + p_col )) {
-                if (fg.map.get( (p_row * 1000) + p_col).isCollideable )
-                    p.visible = false;
-                fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
-                if ( fg.map.get(  (p_row * 1000) + p_col ).isCivilian ) {
-                    fg.civilians.push(new int[]{p_row, p_col});
-                }
-            }
-            if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
-                p.visible = false;
-        }
-
         fg.map.forEach( (k, v) -> {
             if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
                 fg.flames.add( v.flame );
@@ -200,6 +196,37 @@ public class SFTileMap implements TileBasedMap {
 
         fg.tile_map.to_delete.forEach( (k) -> fg.map.remove(k));
         fg.tile_map.to_delete.clear();
+
+        for ( WaterParticle p : fg.water_stream ) {
+            p.update(delta);
+            int p_row = (int) Math.floor(p.getY() / 50);
+            int p_col = (int) Math.floor(p.getX() / 50);
+            if (fg.map.containsKey( (p_row * 1000) + p_col )) {
+                if (fg.map.get( (p_row * 1000) + p_col).isCollideable )
+                    p.visible = false;
+                fg.map.get(  (p_row * 1000) + p_col ).isOnFire = false;
+                if ( fg.map.get(  (p_row * 1000) + p_col ).isCivilian ) {
+                    fg.civilians.push(new int[]{p_row, p_col});
+                }
+            }
+
+            if (p.getX() > fg.ScreenWidth || p.getX() < 0 || p.getY() > fg.ScreenHeight)
+                p.visible = false;
+
+            FlameEnemy delete_enemy = null;
+            for ( FlameEnemy f : fg.fl_enemy ) {
+                if (
+                        p_row == (int) Math.floor(f.getY() / 50) &&
+                        p_col == (int) Math.floor(f.getX() / 50)
+                ) {
+                    f.give_up = true;
+                    delete_enemy = f;
+                }
+            }
+            if (delete_enemy != null) {
+                fg.fl_enemy.remove(delete_enemy);
+            }
+        }
     }
 
     @Override

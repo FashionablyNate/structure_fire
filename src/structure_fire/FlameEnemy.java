@@ -1,10 +1,10 @@
 package structure_fire;
 
-import jdk.internal.util.xml.impl.Pair;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.util.pathfinding.Path;
 
 import java.util.Stack;
 
@@ -19,7 +19,7 @@ public class FlameEnemy extends Entity {
     public FlameEnemy( final float x, final float y ) {
         super ( x, y );
         flame = new Animation(ResourceManager.getSpriteSheet(
-                StructureFireGame.BURN_FIRE_IMG_RSC, 50, 65), 0, 0, 3, 0, true, 100,
+                StructureFireGame.BURN_FIRE_AI, 50, 65), 0, 0, 3, 0, true, 100,
                 true);
         addAnimation(flame);
         flame.setLooping(true);
@@ -73,8 +73,15 @@ public class FlameEnemy extends Entity {
                         options.push(new int[]{(int) Math.floor(v.getX() / 50), (int) Math.floor(v.getY() / 50)});
                     }
                 });
-                for ( int i = 0; i < options.size() && fg.path == null; i++ ) {
-                    fg.path = fg.pathFinder.findPath(null, pos_x, pos_y, options.get(i)[0], options.get(i)[1] );
+                int shortest_length = 100;
+                for ( int i = 0; i < options.size(); i++ ) {
+                    Path temp_path = fg.pathFinder.findPath(null, pos_x, pos_y, options.get(i)[0], options.get(i)[1] );
+                    if (temp_path != null) {
+                        if (temp_path.getLength() < shortest_length) {
+                            fg.path = temp_path;
+                            shortest_length = temp_path.getLength();
+                        }
+                    }
                 }
                 if (fg.path == null) {
                     give_up = true;
