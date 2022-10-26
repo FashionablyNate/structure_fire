@@ -8,6 +8,7 @@ import org.newdawn.slick.util.pathfinding.TileBasedMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -157,50 +158,60 @@ public class SFTileMap implements TileBasedMap {
             }
         }
 
-        fg.map.forEach( (k, v) -> {
-            if ( v.isOnFire && !fg.flames.contains( v.flame ) ) {
-                fg.flames.add( v.flame );
+        for (Map.Entry<Integer, Tile> entry : fg.map.entrySet()) {
+            Integer key = entry.getKey();
+            Tile v = entry.getValue();
+            if (v.isOnFire && !fg.flames.contains(v.flame)) {
+                fg.flames.add(v.flame);
             } else if (!v.isOnFire) {
-                fg.flames.remove( v.flame );
+                fg.flames.remove(v.flame);
             } else {
                 v.timeToLive -= delta;
             }
-            if ( v.timeToLive < 0 ) {
+            if (v.timeToLive < 0) {
+                if (v.isCivilian) {
+                    fg.map.clear();
+                    fg.flames.clear();
+                    fg.fl_enemy.clear();
+                    fg.lost = true;
+                    fg.enterState(StructureFireGame.GAMEOVERSTATE);
+                    return;
+                }
                 v.visible = false;
                 this.flammable_tiles_left--;
-                fg.flames.remove( v.flame );
-                fg.tile_map.to_delete.push(k);
-                fg.tile_map.graph[(int)((v.getY() - 25) / 50)][(int)((v.getX() - 25) / 50)] = 0;
+                fg.flames.remove(v.flame);
+                fg.tile_map.to_delete.push(key);
+                fg.tile_map.graph[(int) ((v.getY() - 25) / 50)][(int) ((v.getX() - 25) / 50)] = 0;
                 if (
-                    fg.map.containsKey( k - 1000 ) &&
-                    fg.map.get( k - 1000 ).flammable &&
-                    !fg.map.get( k - 1000 ).isOnFire
+                        fg.map.containsKey(key - 1000) &&
+                                fg.map.get(key - 1000).flammable &&
+                                !fg.map.get(key - 1000).isOnFire
                 ) {
-                    fg.map.get( k - 1000 ).isOnFire = true;
+                    fg.map.get(key - 1000).isOnFire = true;
                 }
                 if (
-                        fg.map.containsKey( k + 1000 ) &&
-                                fg.map.get( k + 1000 ).flammable &&
-                                !fg.map.get( k + 1000 ).isOnFire
+                        fg.map.containsKey(key + 1000) &&
+                                fg.map.get(key + 1000).flammable &&
+                                !fg.map.get(key + 1000).isOnFire
                 ) {
-                    fg.map.get( k + 1000 ).isOnFire = true;
+                    fg.map.get(key + 1000).isOnFire = true;
                 }
                 if (
-                        fg.map.containsKey( k - 1 ) &&
-                        fg.map.get( k - 1 ).flammable &&
-                        !fg.map.get( k - 1 ).isOnFire
+                        fg.map.containsKey(key - 1) &&
+                                fg.map.get(key - 1).flammable &&
+                                !fg.map.get(key - 1).isOnFire
                 ) {
-                    fg.map.get( k - 1 ).isOnFire = true;
+                    fg.map.get(key - 1).isOnFire = true;
                 }
                 if (
-                        fg.map.containsKey( k + 1 ) &&
-                                fg.map.get( k + 1 ).flammable &&
-                                !fg.map.get( k + 1 ).isOnFire
+                        fg.map.containsKey(key + 1) &&
+                                fg.map.get(key + 1).flammable &&
+                                !fg.map.get(key + 1).isOnFire
                 ) {
-                    fg.map.get( k + 1 ).isOnFire = true;
+                    fg.map.get(key + 1).isOnFire = true;
                 }
             }
-        });
+        }
 
         fg.tile_map.to_delete.forEach( (k) -> fg.map.remove(k));
         fg.tile_map.to_delete.clear();
