@@ -51,6 +51,7 @@ public class SFTileMap implements TileBasedMap {
                             break;
                         case "4":
                             fg.map.put((row * 1000) + col, new Planks((col * 50) + 25, (row * 50) + 25));
+                            fg.map.get((row * 1000) + col).isOnFire = true;
                             fg.fl_enemy.add(new FlameEnemy((col * 50) + 25, (row * 50) + 25));
                             graph[row][col] = 2;
                             this.flammable_tiles_left++;
