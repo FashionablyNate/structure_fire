@@ -7,6 +7,7 @@ import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -14,6 +15,8 @@ public class SFTileMap implements TileBasedMap {
 
     public static final int WIDTH = 12, HEIGHT = 12;
     public int[][] graph;
+    public float flammable_tiles_left;
+    public float initial_flammable_tiles;
     private Stack<Integer> to_delete;
 
     SFTileMap(String level_name, StructureFireGame fg ) {
@@ -33,9 +36,11 @@ public class SFTileMap implements TileBasedMap {
                     if ( s.trim().equals("1") ) {
                         fg.map.put((row * 1000) + col, new Planks((col * 50) + 25, (row * 50) + 25));
                         graph[row][col] = 2;
+                        this.flammable_tiles_left++;
                     } else if ( s.trim().equals("2") ) {
                         fg.map.put((row * 1000) + col, new Ladder((col * 50) + 25, (row * 50) + 25));
                         graph[row][col] = 1;
+                        this.flammable_tiles_left++;
                     } else if ( s.trim().equals("3") ) {
                         fg.map.put((row * 1000) + col, new Stone((col * 50) + 25, (row * 50) + 25));
                         graph[row][col] = 0;
@@ -43,6 +48,7 @@ public class SFTileMap implements TileBasedMap {
                         fg.map.put((row * 1000) + col, new Planks((col * 50) + 25, (row * 50) + 25));
                         fg.fl_enemy = new FlameEnemy((col * 50) + 25, (row * 50) + 25);
                         graph[row][col] = 2;
+                        this.flammable_tiles_left++;
                     } else if ( s.trim().equals("5") ) {
                         fg.player = new Player( (col * 50) + 25, (row * 50) + 25 );
                         graph[row][col] = 0;
@@ -50,15 +56,18 @@ public class SFTileMap implements TileBasedMap {
                         fg.map.put((row * 1000) + col, new Civilian( (col * 50) + 25, (row * 50) + 25 ));
                         fg.civilians.push(new int[]{row, col});
                         graph[row][col] = 2;
+                        this.flammable_tiles_left++;
                     } else if ( s.trim().equals("7") ) {
                         fg.map.put((row * 1000) + col, new Coin( (col * 50) + 25, (row * 50) + 25 ));
                         graph[row][col] = 2;
+                        this.flammable_tiles_left++;
                     } else if ( s.trim().equals("8") ) {
                         fg.map.put((row * 1000) + col, new BGPlanks( (col * 50) + 25, (row * 50) + 25 ));
                         graph[row][col] = 2;
+                        this.flammable_tiles_left++;
                     } else if ( s.trim().equals("H") ) {
                         fg.map.put((row * 1000) + col, new FireHydrant( (col * 50) + 25, (row * 50) + 25 ));
-                        graph[row][col] = 2;
+                        graph[row][col] = 0;
                     } else {
                         graph[row][col] = 0;
                     }
@@ -71,6 +80,7 @@ public class SFTileMap implements TileBasedMap {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+        initial_flammable_tiles = this.flammable_tiles_left;
         return graph;
     }
 
@@ -149,9 +159,31 @@ public class SFTileMap implements TileBasedMap {
             }
             if ( v.timeToLive < 0 ) {
                 v.visible = false;
+                this.flammable_tiles_left--;
                 fg.flames.remove( v.flame );
                 fg.tile_map.to_delete.push(k);
                 fg.tile_map.graph[(int)((v.getY() - 25) / 50)][(int)((v.getX() - 25) / 50)] = 0;
+                if (
+                    fg.map.containsKey( k - 1000 ) &&
+                    fg.map.get( k - 1000 ).flammable &&
+                    !fg.map.get( k - 1000 ).isOnFire
+                ) {
+                    fg.map.get( k - 1000 ).isOnFire = true;
+                }
+                if (
+                        fg.map.containsKey( k - 1 ) &&
+                        fg.map.get( k - 1 ).flammable &&
+                        !fg.map.get( k - 1 ).isOnFire
+                ) {
+                    fg.map.get( k - 1 ).isOnFire = true;
+                }
+                if (
+                        fg.map.containsKey( k + 1 ) &&
+                                fg.map.get( k + 1 ).flammable &&
+                                !fg.map.get( k + 1 ).isOnFire
+                ) {
+                    fg.map.get( k + 1 ).isOnFire = true;
+                }
             }
         });
 

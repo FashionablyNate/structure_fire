@@ -22,6 +22,7 @@ import org.newdawn.slick.util.pathfinding.AStarPathFinder;
  */
 class PlayingState extends BasicGameState {
 	int bounces;
+	Background sky;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -36,6 +37,7 @@ class PlayingState extends BasicGameState {
 				false
 		);
 		fg.fl_enemy.give_up = false;
+		fg.hud = new HUD( fg );
 	}
 
 	@Override
@@ -51,14 +53,15 @@ class PlayingState extends BasicGameState {
 				SFTileMap.WIDTH * SFTileMap.HEIGHT,
 				false
 		);
-		fg.water_gauge = new WaterGauge( 250, 750 );
+		fg.hud = new HUD( fg );
+		sky = new Background(fg.ScreenWidth >> 1, fg.ScreenHeight >> 1);
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		StructureFireGame fg = (StructureFireGame)game;
 
-		g.drawString("Coins: " + fg.player.coins, 10, 30);
+		this.sky.render( g );
 
 		fg.map.forEach( (k, v) -> {
 			if (v.visible)
@@ -75,9 +78,7 @@ class PlayingState extends BasicGameState {
 			b.render(g);
 		for (Sprinkler s : fg.sprinklers)
 			s.render(g);
-		for ( int i = 0; i < fg.sprinkler_inventory; i++ )
-			new Sprinkler( 50 + ( i * 50 ), 750 ).render(g);
-		fg.water_gauge.render( g );
+		fg.hud.render( g, fg );
 	}
 
 	@Override
@@ -107,6 +108,8 @@ class PlayingState extends BasicGameState {
 		if (fg.flames.size() == 0 && fg.fl_enemy.give_up) {
 			fg.enterState(StructureFireGame.GAMEOVERSTATE);
 		}
+
+		fg.hud.update( fg.tile_map );
 	}
 
 	@Override

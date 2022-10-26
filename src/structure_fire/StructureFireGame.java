@@ -53,13 +53,17 @@ public class StructureFireGame extends StateBasedGame {
 	public static final String CIVILIAN = "structure_fire/resource/civilian.png";
 	public static final String COIN = "structure_fire/resource/coin.png";
 	public static final String SPRINKLER = "structure_fire/resource/sprinkler.png";
+	public static final String SPRINKLER_HUD = "structure_fire/resource/sprinkler_hud.png";
 	public static final String HYDRANT = "structure_fire/resource/hydrant.png";
+	public static final String HOUSE = "structure_fire/resource/house.png";
 	public static final String BG_WOODEN_PLANKS = "structure_fire/resource/bg_wooden_planks.png";
 	public static final String WOODEN_PLANKS = "structure_fire/resource/wooden_planks.png";
 	public static final String WOODEN_LADDER = "structure_fire/resource/wooden_ladder.png";
 	public static final String STONE = "structure_fire/resource/stone.png";
+	public static final String SKY = "structure_fire/resource/background.png";
 	public static final String WATER_PARTICLE = "structure_fire/resource/water_particle.png";
 	public static final String WATER_GAUGE = "structure_fire/resource/water_gauge.png";
+	public static final String LEXICON = "structure_fire/resource/lexicon.png";
 	public static final String GAMEOVER_BANNER_RSC = "structure_fire/resource/GameOver.png";
 	public static final String STARTUP_BANNER_RSC = "structure_fire/resource/PressSpace.png";
 	public static final String BURN_FIRE_IMG_RSC = "structure_fire/resource/flames.png";
@@ -81,6 +85,7 @@ public class StructureFireGame extends StateBasedGame {
 	Stack<Sprinkler> sprinklers;
 	Integer sprinkler_inventory;
 	WaterGauge water_gauge;
+	HUD hud;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -128,13 +133,17 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(CIVILIAN);
 		ResourceManager.loadImage(COIN);
 		ResourceManager.loadImage(SPRINKLER);
+		ResourceManager.loadImage(SPRINKLER_HUD);
 		ResourceManager.loadImage(HYDRANT);
+		ResourceManager.loadImage(HOUSE);
 		ResourceManager.loadImage(BG_WOODEN_PLANKS);
 		ResourceManager.loadImage(WOODEN_PLANKS);
 		ResourceManager.loadImage(WOODEN_LADDER);
 		ResourceManager.loadImage(STONE);
+		ResourceManager.loadImage(SKY);
 		ResourceManager.loadImage(WATER_PARTICLE);
 		ResourceManager.loadImage(WATER_GAUGE);
+		ResourceManager.loadImage(LEXICON);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BURN_FIRE_IMG_RSC);

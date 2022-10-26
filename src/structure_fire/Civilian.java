@@ -29,6 +29,8 @@ public class Civilian extends Tile {
                     ResourceManager.getImage(
                             StructureFireGame.CIVILIAN)
             );
+            if ( !this.saved )
+                player.civilians_saved++;
             this.saved = true;
         }
     }
