@@ -169,9 +169,6 @@ public class SFTileMap implements TileBasedMap {
                 v.visible = false;
                 this.flammable_tiles_left--;
                 fg.flames.remove( v.flame );
-                if (v.isCivilian) {
-                    fg.enterState(StructureFireGame.GAMEOVERSTATE);
-                }
                 fg.tile_map.to_delete.push(k);
                 fg.tile_map.graph[(int)((v.getY() - 25) / 50)][(int)((v.getX() - 25) / 50)] = 0;
                 if (

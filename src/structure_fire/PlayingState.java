@@ -25,6 +25,8 @@ class PlayingState extends BasicGameState {
 	Background sky;
 	private String level;
 
+	private boolean show_paths = false;
+
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -76,7 +78,7 @@ class PlayingState extends BasicGameState {
 			s.render(g);
 		fg.hud.render( g, fg );
 
-		if (fg.path != null) {
+		if (fg.path != null && this.show_paths) {
 			for (int i = 1; i < fg.path.getLength(); i++) {
 				new PathImage((fg.path.getX(i) * 50) + 25, (fg.path.getY(i) * 50) + 25).render(g);
 			}
@@ -90,6 +92,34 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		StructureFireGame fg = (StructureFireGame)game;
 
+		if ( input.isKeyDown(Input.KEY_F1) ) {
+			this.show_paths = true;
+		}
+		if ( input.isKeyDown(Input.KEY_1) ) {
+			this.level = "level_one";
+			fg.map.clear();
+			fg.flames.clear();
+			fg.fl_enemy.clear();
+			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+			this.enter(container, game);
+		}
+		if ( input.isKeyDown(Input.KEY_2) ) {
+			this.level = "level_two";
+			fg.map.clear();
+			fg.flames.clear();
+			fg.fl_enemy.clear();
+			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+			this.enter(container, game);
+		}
+		if ( input.isKeyDown(Input.KEY_3) ) {
+			this.level = "level_three";
+			fg.map.clear();
+			fg.flames.clear();
+			fg.fl_enemy.clear();
+			fg.enterState(StructureFireGame.GAMEOVERSTATE);
+			this.enter(container, game);
+		}
+
 		fg.player.movement( input, fg );
 		fg.player.spray( input, fg );
 		fg.player.powerup( input, fg );
@@ -101,8 +131,6 @@ class PlayingState extends BasicGameState {
 
 		for (Sprinkler s : fg.sprinklers)
 			s.update( fg, delta );
-
-		fg.tile_map.update_tiles( delta, fg, input );
 
 		for (FlameEnemy f : fg.fl_enemy) {
 			f.move(delta, fg);
@@ -133,6 +161,8 @@ class PlayingState extends BasicGameState {
 		fg.civilians.removeIf( x -> fg.map.get( (x[0] * 1000) + x[1]).saved);
 		fg.sprinklers.removeIf( x -> x.timeToSpray <= 0 );
 
+		fg.tile_map.update_tiles( delta, fg, input );
+
 		fg.hud.update( fg.tile_map );
 
 		if ( fg.player.health <= 0 )
@@ -154,6 +184,9 @@ class PlayingState extends BasicGameState {
 				this.level = "level_three";
 			else if (this.level.matches("level_three")) {
 				this.level = "level_one";
+				fg.map.clear();
+				fg.flames.clear();
+				fg.fl_enemy.clear();
 				fg.enterState(StructureFireGame.GAMEOVERSTATE);
 			}
 			this.enter(container, game);
