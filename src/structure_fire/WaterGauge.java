@@ -12,10 +12,9 @@ public class WaterGauge extends Entity {
     public WaterGauge(final float x, final float y) {
         super(x, y);
         drain = ResourceManager.getSpriteSheet(
-                StructureFireGame.WATER_GAUGE, 50, 65
+                StructureFireGame.WATER_GAUGE, 100, 130
         );
         addImage( drain.getSubImage(0, 0) );
-        setScale( 1.25f );
         this.stage = 0;
     }
 
