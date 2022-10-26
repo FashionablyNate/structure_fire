@@ -91,6 +91,7 @@ public class StructureFireGame extends StateBasedGame {
 	WaterGauge water_gauge;
 	HUD hud;
 	Integer coins_score, civilians_score, percentage_score;
+	boolean lost = false;
 
 	/**
 	 * Create the StructureFireGame frame, saving the width and height for later use.
@@ -134,7 +135,7 @@ public class StructureFireGame extends StateBasedGame {
 		// and (2) because loading it will load the audio libraries and
 		// unless that is done now, we can't *disable* sound as we
 		// attempt to do in the startUp() method.
-		ResourceManager.loadSound(BANG_EXPLOSIONSND_RSC);	
+//		ResourceManager.loadSound(BANG_EXPLOSIONSND_RSC);
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(PLAYER_CHARACTER_RIGHT);
@@ -155,8 +156,8 @@ public class StructureFireGame extends StateBasedGame {
 		ResourceManager.loadImage(WATER_PARTICLE);
 		ResourceManager.loadImage(WATER_GAUGE);
 		ResourceManager.loadImage(LEXICON);
-		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
-		ResourceManager.loadImage(STARTUP_BANNER_RSC);
+//		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
+//		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BURN_FIRE_IMG_RSC);
 		ResourceManager.loadImage(BURN_FIRE_AI);
 		ResourceManager.loadImage(PATH);

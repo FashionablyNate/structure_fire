@@ -93,11 +93,16 @@ class GameOverState extends BasicGameState {
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
-		
+
+		StructureFireGame fg = (StructureFireGame)game;
 		
 		timer -= delta;
-		if (timer <= 0)
-			game.enterState(StructureFireGame.STARTUPSTATE, new EmptyTransition(), new HorizontalSplitTransition() );
+		if (timer <= 0) {
+			fg.percentage_score = 0;
+			fg.coins_score = 0;
+			fg.civilians_score = 0;
+			game.enterState(StructureFireGame.STARTUPSTATE, new EmptyTransition(), new HorizontalSplitTransition());
+		}
 	}
 
 	@Override

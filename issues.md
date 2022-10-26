@@ -12,5 +12,6 @@
 - **[10]** Health system - Make the fire defeatable, as well as the player
 - **[11]** Splash screens - Make intro screen and game over screen more interesting
 - **[12]** More levels - Create more levels
+- **[13]** Civilian Game Over - Game should end on civilian death
 
 ## Open Issues ##
